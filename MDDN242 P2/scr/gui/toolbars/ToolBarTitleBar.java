@@ -9,10 +9,12 @@ import javax.swing.JPanel;
 public class ToolBarTitleBar extends JPanel {
 
 	private static final long serialVersionUID = 6643322416059228945L;
+	
+	private static final Color BG_COLOR = new Color(53, 53, 53);
 
 	public ToolBarTitleBar(ToolBar parent){
 		setPreferredSize(new Dimension(32, 8));
-		setBackground(new Color(32, 85, 145));
+		setBackground(BG_COLOR);
 	}
 	
 	@Override

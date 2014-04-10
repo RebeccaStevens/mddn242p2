@@ -8,6 +8,7 @@ public class Properties extends AbstractToolBar{
 	private static final long serialVersionUID = -57333252299444276L;
 	
 	public Properties(){
+		super(true);
 		setPreferredSize(new Dimension(300, 480));
 	}
 	

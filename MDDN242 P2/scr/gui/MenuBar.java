@@ -34,7 +34,7 @@ public class MenuBar extends JMenuBar {
 
 		public FileMenu(){
 			setText("File");
-			setMnemonic(KeyEvent.VK_F);
+			setMnemonic('f');
 			
 			addNewItem();
 			addOpenItem();
@@ -87,7 +87,7 @@ public class MenuBar extends JMenuBar {
 
 		public EditMenu(){
 			setText("Edit");
-			setMnemonic(KeyEvent.VK_E);
+			setMnemonic('e');
 		}
 	}
 	
@@ -96,7 +96,7 @@ public class MenuBar extends JMenuBar {
 
 		public WindowMenu(){
 			setText("Window");
-			setMnemonic(KeyEvent.VK_E);
+			setMnemonic('w');
 		}
 	}
 	
@@ -105,7 +105,7 @@ public class MenuBar extends JMenuBar {
 
 		public HelpMenu(){
 			setText("Help");
-			setMnemonic(KeyEvent.VK_E);
+			setMnemonic('h');
 		}
 	}
 }

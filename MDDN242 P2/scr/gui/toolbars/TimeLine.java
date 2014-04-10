@@ -8,6 +8,7 @@ public class TimeLine extends AbstractToolBar{
 	private static final long serialVersionUID = -57333252299444276L;
 	
 	public TimeLine(){
+		super(true);
 		setPreferredSize(new Dimension(640, 250));
 	}
 	

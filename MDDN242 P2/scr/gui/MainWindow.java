@@ -18,6 +18,8 @@ public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = -4580460675035694517L;
 
+	private static final Color BG_COLOR = new Color(40, 40, 40);
+
 	private Canvas canvas;
 
 	// tool bars
@@ -35,7 +37,7 @@ public class MainWindow extends JFrame {
 		setMinimumSize(new Dimension(1024, 768));
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		JPanel content = new JPanel(new BorderLayout(), true);
-		content.setBackground(new Color(40, 40, 40));
+		content.setBackground(BG_COLOR );
 		setContentPane(content);
 
 		createMenuBar();
@@ -61,7 +63,7 @@ public class MainWindow extends JFrame {
 	private void createCanvas(){
 		JPanel panel = new JPanel(new GridBagLayout());
 		panel.setOpaque(false);
-		canvas = new Canvas();
+		canvas = new Canvas(640, 480);
 		panel.add(canvas);
 		getContentPane().add(panel, BorderLayout.CENTER);
 	}

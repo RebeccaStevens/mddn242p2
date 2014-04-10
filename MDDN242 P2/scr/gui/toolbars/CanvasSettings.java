@@ -8,6 +8,7 @@ public class CanvasSettings extends AbstractToolBar{
 	private static final long serialVersionUID = -57333252299444276L;
 	
 	public CanvasSettings(){
+		super(false);
 		setPreferredSize(new Dimension(640, 40));
 	}
 	
