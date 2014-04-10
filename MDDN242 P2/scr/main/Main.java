@@ -34,7 +34,7 @@ public class Main extends JFrame {
 	/**
 	 * Create this (the window)
 	 */
-	public Main(){
+	private Main(){
 		setTitle("Particles by Michael Stevens");
 		setSize(1280, 900);
 		setMinimumSize(new Dimension(1024, 768));

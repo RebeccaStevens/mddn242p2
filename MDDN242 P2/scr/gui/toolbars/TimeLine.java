@@ -10,7 +10,7 @@ public class TimeLine extends JPanel{
 	private static final long serialVersionUID = -57333252299444276L;
 	
 	public TimeLine(){
-		setPreferredSize(new Dimension(640, 200));
+		setPreferredSize(new Dimension(640, 250));
 	}
 	
 	@Override

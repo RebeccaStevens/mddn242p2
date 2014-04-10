@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JMenu;
@@ -57,20 +58,26 @@ public class MenuBar extends JMenuBar {
 		}
 
 		private void addSaveItem() {
-			JMenuItem item = new JMenuItem("Save");
+			JMenuItem item = new JMenuItem("Save", KeyEvent.VK_S);
 			item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 			add(item);
 		}
 
 		private void addSaveAsItem() {
-			JMenuItem item = new JMenuItem("Save As...");
+			JMenuItem item = new JMenuItem("Save As...", KeyEvent.VK_A);
 			item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 			add(item);
 		}
 
 		private void addExitItem() {
-			JMenuItem item = new JMenuItem("Exit");
+			JMenuItem item = new JMenuItem("Exit", KeyEvent.VK_X);
 			item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+			item.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.exit(0);
+				}
+			});
 			add(item);
 		}
 	}
