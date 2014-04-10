@@ -1,6 +1,7 @@
 package main;
 
 import gui.Canvas;
+import gui.MenuBar;
 import gui.ToolBox;
 
 import java.awt.BorderLayout;
@@ -30,6 +31,7 @@ public class Main extends JFrame {
 	    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	    setContentPane(new JPanel(new BorderLayout(), true));
 	    
+	    createMenuBar();
 	    createCanvas();
 	    createToolBox();
 	    
@@ -38,6 +40,10 @@ public class Main extends JFrame {
 		setVisible(true);				// display the window
 	}
 	
+	private void createMenuBar() {
+		setJMenuBar(new MenuBar());
+	}
+
 	/**
 	 * Create the tool box
 	 */
