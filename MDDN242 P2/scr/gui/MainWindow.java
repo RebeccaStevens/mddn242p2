@@ -47,13 +47,16 @@ public class MainWindow extends JFrame {
 		setContentPane(content);
 
 		createMenuBar();
-		createCanvas();
+		createCanvasContainer();
 		createCanvasSettings();
 		createToolBox();
 		craeteProperties();
 		createTimeLine();
+		
+		createCanvas(640, 480);
 
-		canvas.init();					// start the animation thread (and other such stuff)
+		resetPerspective();
+		
 		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);	// maximize the window
 		setLocationRelativeTo(null);	// center the window on the screen
 		setVisible(true);				// display the window
@@ -61,7 +64,7 @@ public class MainWindow extends JFrame {
 	
 	public boolean dock(ToolBar toolBar, int mouseX, int mouseY) {
 		String dockPosition = getDockingLocation(mouseX, mouseY);
-		
+		System.out.println(dockPosition);
 		if(dockPosition == null) return false;
 		dock(toolBar, dockPosition);
 		return true;
@@ -71,6 +74,14 @@ public class MainWindow extends JFrame {
 		getContentPane().add(toolBar, position);
 		revalidate();
 		repaint();
+	}
+	
+	public void resetPerspective(){
+		getContentPane().add(canvasSettings, BorderLayout.NORTH);
+		getContentPane().add(properties, BorderLayout.EAST);
+		getContentPane().add(timeLine, BorderLayout.SOUTH);
+		getContentPane().add(toolbox, BorderLayout.WEST);
+		getContentPane().add(canvasContainer, BorderLayout.CENTER);
 	}
 	
 	private String getDockingLocation(int mouseX, int mouseY){
@@ -87,8 +98,8 @@ public class MainWindow extends JFrame {
 		&& mouseY < windowLocation.y + insets.top + menuHeight + canvasContainer.getY() + canvasContainer.getHeight()){
 			return BorderLayout.WEST;
 		} else
-		if(mouseX < windowLocation.x + windowSize.width - insets.right
-		&& mouseX > windowLocation.x + windowSize.width - insets.right - dist
+		if(mouseX < windowLocation.x - insets.right + windowSize.width
+		&& mouseX > windowLocation.x - insets.right + windowSize.width - dist
 		&& mouseY > windowLocation.y + insets.top + menuHeight + canvasContainer.getY()
 		&& mouseY < windowLocation.y + insets.top + menuHeight + canvasContainer.getY() + canvasContainer.getHeight()){
 			return BorderLayout.EAST;
@@ -101,8 +112,8 @@ public class MainWindow extends JFrame {
 		} else
 		if(mouseX > windowLocation.x + insets.left
 		&& mouseX < windowLocation.x + insets.left + windowSize.width
-		&& mouseY < windowLocation.y + windowSize.height - insets.bottom
-		&& mouseY > windowLocation.y + windowSize.height - insets.bottom - dist){
+		&& mouseY < windowLocation.y - insets.bottom + windowSize.height
+		&& mouseY > windowLocation.y - insets.bottom + windowSize.height - dist){
 			return BorderLayout.SOUTH;
 		}
 		return null;
@@ -112,20 +123,22 @@ public class MainWindow extends JFrame {
 		setJMenuBar(menu = new MenuBar());
 	}
 
+	private void createCanvasContainer(){
+		canvasContainer = new JPanel(new GridBagLayout());
+		canvasContainer.setOpaque(false);
+	}
+	
 	/**
 	 * Create the canvas
 	 */
-	private void createCanvas(){
-		canvasContainer = new JPanel(new GridBagLayout());
-		canvasContainer.setOpaque(false);
-		canvas = new Canvas(640, 480);
+	private void createCanvas(int w, int h){
+		canvas = new Canvas(w, h);
 		canvasContainer.add(canvas);
-		getContentPane().add(canvasContainer, BorderLayout.CENTER);
+		canvas.init();
 	}
 
 	private void createCanvasSettings() {
 		canvasSettings = new CanvasSettings(this);
-		getContentPane().add(canvasSettings, BorderLayout.NORTH);
 	}
 
 	/**
@@ -133,16 +146,13 @@ public class MainWindow extends JFrame {
 	 */
 	private void createToolBox(){
 		toolbox = new ToolBox(this);
-		getContentPane().add(toolbox, BorderLayout.WEST);
 	}
 
 	private void craeteProperties() {
 		properties = new Properties(this);
-		getContentPane().add(properties, BorderLayout.EAST);
 	}
 
 	private void createTimeLine() {
 		timeLine = new TimeLine(this);
-		getContentPane().add(timeLine, BorderLayout.SOUTH);
 	}
 }
