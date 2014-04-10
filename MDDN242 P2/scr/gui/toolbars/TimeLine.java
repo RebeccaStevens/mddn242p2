@@ -1,14 +1,15 @@
 package gui.toolbars;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Graphics;
 
-public class TimeLine extends AbstractToolBar{
+public class TimeLine extends ToolBar{
 
 	private static final long serialVersionUID = -57333252299444276L;
 	
-	public TimeLine(){
-		super(true);
+	public TimeLine(Frame parentFrame){
+		super(parentFrame, true);
 		setPreferredSize(new Dimension(640, 250));
 	}
 	

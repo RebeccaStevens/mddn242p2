@@ -1,14 +1,15 @@
 package gui.toolbars;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Graphics;
 
-public class ToolBox extends AbstractToolBar{
+public class ToolBox extends ToolBar{
 
 	private static final long serialVersionUID = -57333252299444276L;
 	
-	public ToolBox(){
-		super(true);
+	public ToolBox(Frame parentFrame){
+		super(parentFrame, true);
 		setPreferredSize(new Dimension(70, 480));
 	}
 	

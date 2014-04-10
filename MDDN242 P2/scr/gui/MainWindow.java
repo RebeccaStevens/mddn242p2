@@ -7,6 +7,7 @@ import gui.toolbars.ToolBox;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 
@@ -32,7 +33,7 @@ public class MainWindow extends JFrame {
 	 * Create this (the window)
 	 */
 	public MainWindow(){
-		setTitle("Particles by Michael Stevens");
+		setTitle("Particle Creator");
 		setSize(1280, 900);
 		setMinimumSize(new Dimension(1024, 768));
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -42,7 +43,7 @@ public class MainWindow extends JFrame {
 
 		createMenuBar();
 		createCanvas();
-		createCancasSettings();
+		createCanvasSettings();
 		createToolBox();
 		craeteProperties();
 		createTimeLine();
@@ -68,8 +69,8 @@ public class MainWindow extends JFrame {
 		getContentPane().add(panel, BorderLayout.CENTER);
 	}
 
-	private void createCancasSettings() {
-		canvasSettings = new CanvasSettings();
+	private void createCanvasSettings() {
+		canvasSettings = new CanvasSettings(this);
 		getContentPane().add(canvasSettings, BorderLayout.NORTH);
 	}
 
@@ -77,18 +78,17 @@ public class MainWindow extends JFrame {
 	 * Create the tool box
 	 */
 	private void createToolBox(){
-		toolbox = new ToolBox();
+		toolbox = new ToolBox(this);
 		getContentPane().add(toolbox, BorderLayout.WEST);
 	}
 
 	private void craeteProperties() {
-		properties = new Properties();
+		properties = new Properties(this);
 		getContentPane().add(properties, BorderLayout.EAST);
-
 	}
 
 	private void createTimeLine() {
-		timeLine = new TimeLine();
+		timeLine = new TimeLine(this);
 		getContentPane().add(timeLine, BorderLayout.SOUTH);
 	}
 }

@@ -1,14 +1,15 @@
 package gui.toolbars;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Graphics;
 
-public class CanvasSettings extends AbstractToolBar{
+public class CanvasSettings extends ToolBar{
 
 	private static final long serialVersionUID = -57333252299444276L;
 	
-	public CanvasSettings(){
-		super(false);
+	public CanvasSettings(Frame parentFrame){
+		super(parentFrame, false);
 		setPreferredSize(new Dimension(640, 40));
 	}
 	
