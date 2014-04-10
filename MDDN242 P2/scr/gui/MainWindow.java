@@ -23,6 +23,7 @@ public class MainWindow extends JFrame {
 
 	private static final Color BG_COLOR = new Color(40, 40, 40);
 
+	private MenuBar menu;
 	private Canvas canvas;
 
 	// tool bars
@@ -81,14 +82,22 @@ public class MainWindow extends JFrame {
 			return BorderLayout.WEST;
 		} else
 		if(mouseX < windowLocation.x + windowSize.width - insets.right
-		&& mouseX > windowLocation.x +  + windowSize.width - insets.right - dist){
+		&& mouseX > windowLocation.x + windowSize.width - insets.right - dist){
 			return BorderLayout.EAST;
+		} else
+		if(mouseY > windowLocation.y + insets.top + menu.getHeight()
+		&& mouseY < windowLocation.y + insets.top + menu.getHeight() + dist){
+			return BorderLayout.NORTH;
+		} else
+		if(mouseY < windowLocation.y + windowSize.height - insets.bottom
+		&& mouseY > windowLocation.y + windowSize.height - insets.bottom - dist){
+			return BorderLayout.SOUTH;
 		}
 		return null;
 	}
 
 	private void createMenuBar() {
-		setJMenuBar(new MenuBar());
+		setJMenuBar(menu = new MenuBar());
 	}
 
 	/**
