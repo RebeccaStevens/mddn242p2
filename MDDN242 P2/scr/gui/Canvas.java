@@ -18,11 +18,13 @@ public class Canvas extends PApplet{
 		this.h = height;
 	}
 	
+	@Override
 	public void setup(){
 		size(w, h);
 		background(0xFFFFFFFF);
 	}
 	
+	@Override
 	public void draw(){
 		
 	}

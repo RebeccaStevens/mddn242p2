@@ -50,7 +50,7 @@ public class ToolBarTitleBar extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			toolbar.dragStart(e.getX(), e.getY());
+			toolbar.dragStart(e.getXOnScreen(), e.getYOnScreen());
 		}
 
 		@Override
@@ -65,7 +65,7 @@ public class ToolBarTitleBar extends JPanel {
 		
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			toolbar.dragUpdate(e.getX(), e.getY());
+			toolbar.dragUpdate(e.getXOnScreen(), e.getYOnScreen());
 		}
 	}
 }
