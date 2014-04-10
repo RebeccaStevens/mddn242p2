@@ -42,6 +42,8 @@ public class MenuBar extends JMenuBar {
 			addSaveItem();
 			addSaveAsItem();
 			addSeperator();
+			addExportItem();
+			addSeperator();
 			addExitItem();
 		}
 
@@ -66,6 +68,12 @@ public class MenuBar extends JMenuBar {
 		private void addSaveAsItem() {
 			JMenuItem item = new JMenuItem("Save As...", KeyEvent.VK_A);
 			item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
+			add(item);
+		}
+		
+		private void addExportItem() {
+			JMenuItem item = new JMenuItem("Export", KeyEvent.VK_E);
+			item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK | ActionEvent.ALT_MASK | ActionEvent.SHIFT_MASK));
 			add(item);
 		}
 
