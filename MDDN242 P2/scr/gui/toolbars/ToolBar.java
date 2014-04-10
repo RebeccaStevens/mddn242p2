@@ -61,12 +61,14 @@ public abstract class ToolBar extends JPanel {
 		lastDrag.x = x;
 		lastDrag.y = y;
 		
+		Point oldLoc = this.getLocationOnScreen();
 		Dimension oldSize = this.getSize();
+		
 		displayInPopup();
+		
 		Dimension newSize = popup.getSize();
 		Point loc = popup.getLocationOnScreen();
-		loc.x += (oldSize.width - newSize.width) / 2;
-		//loc.x += (double)x * newSize.width / oldSize.width;
+		loc.x += (oldSize.width - newSize.width) * (double)(x - oldLoc.x) / oldSize.width;
 		popup.setLocation(loc);
 	}
 
