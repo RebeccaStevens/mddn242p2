@@ -3,9 +3,7 @@ package gui.toolbars;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-import javax.swing.JPanel;
-
-public class CanvasSettings extends JPanel{
+public class CanvasSettings extends AbstractToolBar{
 
 	private static final long serialVersionUID = -57333252299444276L;
 	
@@ -14,7 +12,7 @@ public class CanvasSettings extends JPanel{
 	}
 	
 	@Override
-	public void paintComponent(Graphics g) {
+	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 	}
 }
