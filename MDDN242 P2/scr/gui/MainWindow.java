@@ -55,7 +55,7 @@ public class MainWindow extends JFrame {
 		
 		createCanvas(640, 480);
 
-		resetPerspective();
+		addComonents();
 		
 		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);	// maximize the window
 		setLocationRelativeTo(null);	// center the window on the screen
@@ -64,7 +64,6 @@ public class MainWindow extends JFrame {
 	
 	public boolean dock(ToolBar toolBar, int mouseX, int mouseY) {
 		String dockPosition = getDockingLocation(mouseX, mouseY);
-		System.out.println(dockPosition);
 		if(dockPosition == null) return false;
 		dock(toolBar, dockPosition);
 		return true;
@@ -76,12 +75,23 @@ public class MainWindow extends JFrame {
 		repaint();
 	}
 	
-	public void resetPerspective(){
+	public void addComonents(){
 		getContentPane().add(canvasSettings, BorderLayout.NORTH);
 		getContentPane().add(properties, BorderLayout.EAST);
 		getContentPane().add(timeLine, BorderLayout.SOUTH);
 		getContentPane().add(toolbox, BorderLayout.WEST);
 		getContentPane().add(canvasContainer, BorderLayout.CENTER);
+	}
+	
+	public void resetPerspective(){
+		addComonents();
+		canvasSettings.close();
+		properties.close();
+		timeLine.close();
+		toolbox.close();
+		
+		revalidate();
+		repaint();
 	}
 	
 	private String getDockingLocation(int mouseX, int mouseY){

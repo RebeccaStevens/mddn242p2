@@ -25,14 +25,19 @@ public abstract class ToolBar extends JPanel {
 	private JDialog popup;
 	private Point lastDrag;
 
-	public ToolBar(Frame parentFrame, boolean popupable){
+	public ToolBar(Frame parentFrame, boolean popupEnable){
 		setLayout(new BorderLayout(0, 0));
 		setBorder(BorderFactory.createLineBorder(BORDER_COLOR, 1));
 		setBackground(BG_COLOR);
 		
-		if(popupable){
+		if(popupEnable){
 			createPopup(parentFrame);
 		}
+	}
+
+	public void close(){
+		if(popup == null) return;
+		popup.setVisible(false);
 	}
 
 	private void createPopup(Frame parentFrame) {
@@ -49,16 +54,9 @@ public abstract class ToolBar extends JPanel {
 		super.paintComponent(g);
 	}
 	
-	public void setDocked(boolean b){
-		if(b)	{//dock();
-			
-		}
-		else	unDock();
-	}
-	
 	private void dock(int mouseX, int mouseY){
 		if(Main.getMainWindow().dock(this, mouseX, mouseY)){
-			popup.setVisible(false);
+			close();
 		}
 	}
 	
@@ -79,7 +77,7 @@ public abstract class ToolBar extends JPanel {
 		
 		Point oldLoc = this.getLocationOnScreen();
 		Dimension oldSize = this.getSize();
-		setDocked(false);
+		unDock();
 		Dimension newSize = popup.getSize();
 		Point loc = popup.getLocationOnScreen();
 		loc.x += (oldSize.width - newSize.width) * (double)(x - oldLoc.x) / oldSize.width;
