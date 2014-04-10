@@ -35,13 +35,17 @@ public class ToolBarTitleBar extends JPanel {
 	private class DragEventListener implements MouseListener, MouseMotionListener{
 		@Override public void mouseClicked(MouseEvent e) {}
 		@Override public void mouseEntered(MouseEvent e) {}
-		@Override public void mouseExited(MouseEvent e) {}
-		@Override public void mouseReleased(MouseEvent e) {}		
+		@Override public void mouseExited(MouseEvent e) {}		
 		@Override public void mouseMoved(MouseEvent e) {}
 		
 		@Override
 		public void mousePressed(MouseEvent e) {
 			toolbar.dragStart(e.getXOnScreen(), e.getYOnScreen());
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			toolbar.dragEnd(e.getXOnScreen(), e.getYOnScreen());
 		}
 		
 		@Override

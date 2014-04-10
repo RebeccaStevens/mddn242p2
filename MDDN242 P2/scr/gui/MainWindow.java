@@ -3,12 +3,15 @@ package gui;
 import gui.toolbars.CanvasSettings;
 import gui.toolbars.Properties;
 import gui.toolbars.TimeLine;
+import gui.toolbars.ToolBar;
 import gui.toolbars.ToolBox;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Point;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -51,6 +54,37 @@ public class MainWindow extends JFrame {
 		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);	// maximize the window
 		setLocationRelativeTo(null);	// center the window on the screen
 		setVisible(true);				// display the window
+	}
+	
+	public boolean dock(ToolBar toolBar, int mouseX, int mouseY) {
+		String dockPosition = getDockingLocation(mouseX, mouseY);
+		
+		if(dockPosition == null) return false;
+		dock(toolBar, dockPosition);
+		return true;
+	}
+	
+	public void dock(ToolBar toolBar, String position) {
+		getContentPane().add(toolBar, position);
+		revalidate();
+		repaint();
+	}
+	
+	private String getDockingLocation(int mouseX, int mouseY){
+		final int dist = 24;
+		
+		Insets insets = getInsets();
+		Point windowLocation = getLocationOnScreen();
+		Dimension windowSize = getSize();
+		if(mouseX > windowLocation.x + insets.left
+		&& mouseX < windowLocation.x + insets.left + dist){
+			return BorderLayout.WEST;
+		} else
+		if(mouseX < windowLocation.x + windowSize.width - insets.right
+		&& mouseX > windowLocation.x +  + windowSize.width - insets.right - dist){
+			return BorderLayout.EAST;
+		}
+		return null;
 	}
 
 	private void createMenuBar() {

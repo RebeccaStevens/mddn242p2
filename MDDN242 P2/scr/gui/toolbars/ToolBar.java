@@ -49,7 +49,20 @@ public abstract class ToolBar extends JPanel {
 		super.paintComponent(g);
 	}
 	
-	public void displayInPopup(){
+	public void setDocked(boolean b){
+		if(b)	{//dock();
+			
+		}
+		else	unDock();
+	}
+	
+	private void dock(int mouseX, int mouseY){
+		if(Main.getMainWindow().dock(this, mouseX, mouseY)){
+			popup.setVisible(false);
+		}
+	}
+	
+	private void unDock(){
 		popup.setLocation(this.getLocationOnScreen());
 		popup.setContentPane(this);
 		popup.pack();
@@ -66,9 +79,7 @@ public abstract class ToolBar extends JPanel {
 		
 		Point oldLoc = this.getLocationOnScreen();
 		Dimension oldSize = this.getSize();
-		
-		displayInPopup();
-		
+		setDocked(false);
 		Dimension newSize = popup.getSize();
 		Point loc = popup.getLocationOnScreen();
 		loc.x += (oldSize.width - newSize.width) * (double)(x - oldLoc.x) / oldSize.width;
@@ -80,5 +91,9 @@ public abstract class ToolBar extends JPanel {
 		popup.setLocation(current.x + x - lastDrag.x, current.y + y - lastDrag.y);
 		lastDrag.x = x;
 		lastDrag.y = y;
+	}
+
+	void dragEnd(int xOnScreen, int yOnScreen) {
+		dock(xOnScreen, yOnScreen);
 	}
 }
