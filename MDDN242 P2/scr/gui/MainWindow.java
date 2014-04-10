@@ -24,6 +24,8 @@ public class MainWindow extends JFrame {
 	private static final Color BG_COLOR = new Color(40, 40, 40);
 
 	private MenuBar menu;
+	
+	private JPanel canvasContainer;
 	private Canvas canvas;
 
 	// tool bars
@@ -74,22 +76,32 @@ public class MainWindow extends JFrame {
 	private String getDockingLocation(int mouseX, int mouseY){
 		final int dist = 24;
 		
+		int menuHeight = menu.getHeight();
+		
 		Insets insets = getInsets();
 		Point windowLocation = getLocationOnScreen();
 		Dimension windowSize = getSize();
 		if(mouseX > windowLocation.x + insets.left
-		&& mouseX < windowLocation.x + insets.left + dist){
+		&& mouseX < windowLocation.x + insets.left + dist
+		&& mouseY > windowLocation.y + insets.top + menuHeight + canvasContainer.getY()
+		&& mouseY < windowLocation.y + insets.top + menuHeight + canvasContainer.getY() + canvasContainer.getHeight()){
 			return BorderLayout.WEST;
 		} else
 		if(mouseX < windowLocation.x + windowSize.width - insets.right
-		&& mouseX > windowLocation.x + windowSize.width - insets.right - dist){
+		&& mouseX > windowLocation.x + windowSize.width - insets.right - dist
+		&& mouseY > windowLocation.y + insets.top + menuHeight + canvasContainer.getY()
+		&& mouseY < windowLocation.y + insets.top + menuHeight + canvasContainer.getY() + canvasContainer.getHeight()){
 			return BorderLayout.EAST;
 		} else
-		if(mouseY > windowLocation.y + insets.top + menu.getHeight()
-		&& mouseY < windowLocation.y + insets.top + menu.getHeight() + dist){
+		if(mouseX > windowLocation.x + insets.left
+		&& mouseX < windowLocation.x + insets.left + windowSize.width
+		&& mouseY > windowLocation.y + insets.top + menuHeight
+		&& mouseY < windowLocation.y + insets.top + menuHeight + dist){
 			return BorderLayout.NORTH;
 		} else
-		if(mouseY < windowLocation.y + windowSize.height - insets.bottom
+		if(mouseX > windowLocation.x + insets.left
+		&& mouseX < windowLocation.x + insets.left + windowSize.width
+		&& mouseY < windowLocation.y + windowSize.height - insets.bottom
 		&& mouseY > windowLocation.y + windowSize.height - insets.bottom - dist){
 			return BorderLayout.SOUTH;
 		}
@@ -104,11 +116,11 @@ public class MainWindow extends JFrame {
 	 * Create the canvas
 	 */
 	private void createCanvas(){
-		JPanel panel = new JPanel(new GridBagLayout());
-		panel.setOpaque(false);
+		canvasContainer = new JPanel(new GridBagLayout());
+		canvasContainer.setOpaque(false);
 		canvas = new Canvas(640, 480);
-		panel.add(canvas);
-		getContentPane().add(panel, BorderLayout.CENTER);
+		canvasContainer.add(canvas);
+		getContentPane().add(canvasContainer, BorderLayout.CENTER);
 	}
 
 	private void createCanvasSettings() {
