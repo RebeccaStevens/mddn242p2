@@ -5,8 +5,6 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-import main.Main;
-
 public class CanvasSettings extends JPanel{
 
 	private static final long serialVersionUID = -57333252299444276L;

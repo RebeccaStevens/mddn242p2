@@ -50,8 +50,8 @@ public class Main extends JFrame {
 	    craeteProperties();
 	    createTimeLine();
 	    
-	    
 	    canvas.init();					// start the animation thread (and other such stuff)
+		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);	// maximize the window
 	    setLocationRelativeTo(null);	// center the window on the screen
 		setVisible(true);				// display the window
 	}
