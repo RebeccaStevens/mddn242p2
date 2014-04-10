@@ -36,8 +36,8 @@ public class MainWindow extends JFrame {
 		setSize(1280, 900);
 		setMinimumSize(new Dimension(1024, 768));
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		JPanel content = new JPanel(new BorderLayout(), true);
-		content.setBackground(BG_COLOR );
+		JPanel content = new JPanel(new BorderLayout(-1, -1), true);
+		content.setBackground(BG_COLOR);
 		setContentPane(content);
 
 		createMenuBar();

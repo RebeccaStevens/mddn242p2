@@ -9,6 +9,7 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
@@ -19,12 +20,14 @@ public abstract class ToolBar extends JPanel {
 	private static final long serialVersionUID = -5998480583258246438L;
 	
 	private static final Color BG_COLOR = new Color(83, 83, 83);
+	private static final Color BORDER_COLOR = new Color(20, 20, 20);
 
 	private JDialog popup;
 	private Point lastDrag;
 
 	public ToolBar(Frame parentFrame, boolean popupable){
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout(0, 0));
+		setBorder(BorderFactory.createLineBorder(BORDER_COLOR, 1));
 		setBackground(BG_COLOR);
 		
 		if(popupable){
