@@ -19,8 +19,8 @@ public abstract class ToolBar extends JPanel {
 
 	private static final long serialVersionUID = -5998480583258246438L;
 	
-	private static final Color BG_COLOR = new Color(83, 83, 83);
-	private static final Color BORDER_COLOR = new Color(20, 20, 20);
+	public static final Color BG_COLOR = new Color(83, 83, 83);
+	public static final Color BORDER_COLOR = new Color(20, 20, 20);
 
 	private JDialog popup;
 	private Point lastDrag;
@@ -61,12 +61,14 @@ public abstract class ToolBar extends JPanel {
 	}
 	
 	private void unDock(){
+		MainWindow window = Main.getMainWindow();
+		window.undock(this);
+		
 		popup.setLocation(this.getLocationOnScreen());
 		popup.setContentPane(this);
 		popup.pack();
 		popup.setVisible(true);
 		
-		MainWindow window = Main.getMainWindow();
 		window.revalidate();
 		window.repaint();
 	}
