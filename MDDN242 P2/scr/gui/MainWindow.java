@@ -68,7 +68,7 @@ public class MainWindow extends JFrame {
 		
 		createCanvas(640, 480);
 
-		addComonents();
+		addComponents();
 		
 		setExtendedState(getExtendedState() | Frame.MAXIMIZED_BOTH);	// maximize the window
 		setLocationRelativeTo(null);	// center the window on the screen
@@ -123,7 +123,7 @@ public class MainWindow extends JFrame {
 		p.remove(i-1);
 	}
 
-	public void addComonents(){
+	public void addComponents(){
 		containers[NORTH].add(canvasSettings);
 		containers[SOUTH].add(timeLine);
 		containers[EAST].add(properties);
@@ -131,7 +131,7 @@ public class MainWindow extends JFrame {
 	}
 	
 	public void resetPerspective(){
-		addComonents();
+		addComponents();
 		canvasSettings.close();
 		properties.close();
 		timeLine.close();
