@@ -3,7 +3,6 @@ package gui;
 import gui.toolbars.CanvasSettings;
 import gui.toolbars.Properties;
 import gui.toolbars.TimeLine;
-import gui.toolbars.ToolBar;
 import gui.toolbars.ToolBox;
 
 import java.awt.BorderLayout;
@@ -40,7 +39,7 @@ public class MainWindow extends JFrame {
 	private JPanel[] containers = new JPanel[5];
 	private Canvas canvas;
 
-	// tool bars
+	// toolbars
 	private CanvasSettings canvasSettings;
 	private ToolBox toolbox;
 	private Properties properties;
@@ -54,6 +53,8 @@ public class MainWindow extends JFrame {
 		setSize(1280, 900);
 		setMinimumSize(new Dimension(1024, 768));
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		
+		// create content pane
 		JPanel content = new JPanel(new BorderLayout(-1, -1), true);
 		content.setBackground(BG_COLOR);
 		setContentPane(content);
@@ -75,46 +76,69 @@ public class MainWindow extends JFrame {
 		setVisible(true);				// display the window
 	}
 	
-	public boolean dock(ToolBar toolBar, int mouseX, int mouseY) {
+	/**
+	 * Dock the given toolbar into is window based on the given mouse x and y location given.
+	 * The toolbar will not be docked if the given mouse location is not within a docking area.
+	 * @param toolbar The toolbar to dock
+	 * @param mouseX The x location of the mouse
+	 * @param mouseY The y location of the mouse
+	 * @return true if the toolbar was docked, otherwise false
+	 */
+	public boolean dock(Toolbar toolbar, int mouseX, int mouseY) {
 		String dockPosition = getDockingLocation(mouseX, mouseY);
 		if(dockPosition == null) return false;
-		dock(toolBar, dockPosition);
+		dock(toolbar, dockPosition);
 		return true;
 	}
 	
-	public void dock(ToolBar toolBar, String position) {
+	/**
+	 * Dock the given toolbar to the given position.
+	 * @param toolbar The toolbar to dock
+	 * @param position The position to dock the toolbar in.
+	 * Valid options: BorderLayout.NORTH, BorderLayout.EAST, BorderLayout.SOUTH, BorderLayout.WEST
+	 */
+	public void dock(Toolbar toolbar, String position) {
 		if(position == BorderLayout.NORTH){
 			containers[NORTH].add(Box.createVerticalStrut(-1));
-			containers[NORTH].add(toolBar, position);
+			containers[NORTH].add(toolbar, position);
 		}
 		else if(position == BorderLayout.EAST){
 			containers[EAST].add(Box.createHorizontalStrut(-1));
-			containers[EAST].add(toolBar, position);
+			containers[EAST].add(toolbar, position);
 		}
 		else if(position == BorderLayout.SOUTH){
 			containers[SOUTH].add(Box.createVerticalStrut(-1));
-			containers[SOUTH].add(toolBar, position);
+			containers[SOUTH].add(toolbar, position);
 		}
 		else if(position == BorderLayout.WEST){
 			containers[WEST].add(Box.createHorizontalStrut(-1));
-			containers[WEST].add(toolBar, position);
+			containers[WEST].add(toolbar, position);
+		}
+		else{
+			return;
 		}
 		revalidate();
 		repaint();
 	}
 	
-	public void undock(ToolBar toolBar){
-		removeUnneedStrut(toolBar);
+	/**
+	 * Undock the given toolbar from the window.
+	 * This method should be called from the toolbar class when undocking the toolbar
+	 * in order for this class to perform needed cleanups
+	 * @param toolbar The toolbar being undocked
+	 */
+	void undock(Toolbar toolbar){
+		removeUnneedStrut(toolbar);
 	}
 	
-	private void removeUnneedStrut(ToolBar toolBar) {
-		Container p = toolBar.getParent();
+	private void removeUnneedStrut(Toolbar toolbar) {
+		Container p = toolbar.getParent();
 		if(p == null) return;
 		
 		Component[] comps = p.getComponents();
 		int i = 0;
 		for(; i<comps.length; i++){
-			if(comps[i] == toolBar) break;
+			if(comps[i] == toolbar) break;
 		}
 
 		if(i < 1) return;
@@ -123,25 +147,39 @@ public class MainWindow extends JFrame {
 		p.remove(i-1);
 	}
 
-	public void addComponents(){
+	/**
+	 * Add the components to their default containers
+	 */
+	private void addComponents(){
 		containers[NORTH].add(canvasSettings);
 		containers[SOUTH].add(timeLine);
 		containers[EAST].add(properties);
 		containers[WEST].add(toolbox);
 	}
 	
+	/**
+	 * Reset the window's perspective.
+	 * All tool bars are put back to their default positions
+	 */
 	public void resetPerspective(){
-		addComponents();
 		canvasSettings.close();
 		properties.close();
 		timeLine.close();
 		toolbox.close();
 		
+		addComponents();
+		
 		revalidate();
 		repaint();
 	}
 	
-	private String getDockingLocation(int mouseX, int mouseY){
+	/**
+	 * Returns the dock location that the (x, y) point is next to. 
+	 * @param x The x position of the point to test
+	 * @param y The y position of the point to test
+	 * @return BorderLayout.NORTH, BorderLayout.EAST, BorderLayout.SOUTH, BorderLayout.WEST or null
+	 */
+	private String getDockingLocation(int x, int y){
 		final int dist = 24;
 		
 		int menuHeight = menu.getHeight();
@@ -149,37 +187,43 @@ public class MainWindow extends JFrame {
 		Point windowLocation = getLocationOnScreen();
 		Dimension windowSize = getSize();
 		
-		if(mouseX > windowLocation.x + insets.left + containers[WEST].getWidth()
-		&& mouseX < windowLocation.x + insets.left + containers[WEST].getWidth() + dist
-		&& mouseY > windowLocation.y + insets.top + menuHeight + containers[CENTER].getY()
-		&& mouseY < windowLocation.y + insets.top + menuHeight + containers[CENTER].getY() + containers[CENTER].getHeight()){
+		if(x > windowLocation.x + insets.left + containers[WEST].getWidth()
+		&& x < windowLocation.x + insets.left + containers[WEST].getWidth() + dist
+		&& y > windowLocation.y + insets.top + menuHeight + containers[CENTER].getY()
+		&& y < windowLocation.y + insets.top + menuHeight + containers[CENTER].getY() + containers[CENTER].getHeight()){
 			return BorderLayout.WEST;
 		} else
-		if(mouseX < windowLocation.x - insets.right - containers[EAST].getWidth() + windowSize.width
-		&& mouseX > windowLocation.x - insets.right - containers[EAST].getWidth() + windowSize.width - dist
-		&& mouseY > windowLocation.y + insets.top + menuHeight + containers[CENTER].getY()
-		&& mouseY < windowLocation.y + insets.top + menuHeight + containers[CENTER].getY() + containers[CENTER].getHeight()){
+		if(x < windowLocation.x - insets.right - containers[EAST].getWidth() + windowSize.width
+		&& x > windowLocation.x - insets.right - containers[EAST].getWidth() + windowSize.width - dist
+		&& y > windowLocation.y + insets.top + menuHeight + containers[CENTER].getY()
+		&& y < windowLocation.y + insets.top + menuHeight + containers[CENTER].getY() + containers[CENTER].getHeight()){
 			return BorderLayout.EAST;
 		} else
-		if(mouseX > windowLocation.x + insets.left
-		&& mouseX < windowLocation.x + insets.left + windowSize.width
-		&& mouseY > windowLocation.y + insets.top + containers[NORTH].getHeight() + menuHeight
-		&& mouseY < windowLocation.y + insets.top + containers[NORTH].getHeight() + menuHeight + dist){
+		if(x > windowLocation.x + insets.left
+		&& x < windowLocation.x + insets.left + windowSize.width
+		&& y > windowLocation.y + insets.top + containers[NORTH].getHeight() + menuHeight
+		&& y < windowLocation.y + insets.top + containers[NORTH].getHeight() + menuHeight + dist){
 			return BorderLayout.NORTH;
 		} else
-		if(mouseX > windowLocation.x + insets.left - containers[SOUTH].getHeight()
-		&& mouseX < windowLocation.x + insets.left - containers[SOUTH].getHeight() + windowSize.width
-		&& mouseY < windowLocation.y - insets.bottom + windowSize.height
-		&& mouseY > windowLocation.y - insets.bottom + windowSize.height - dist){
+		if(x > windowLocation.x + insets.left - containers[SOUTH].getHeight()
+		&& x < windowLocation.x + insets.left - containers[SOUTH].getHeight() + windowSize.width
+		&& y < windowLocation.y - insets.bottom + windowSize.height
+		&& y > windowLocation.y - insets.bottom + windowSize.height - dist){
 			return BorderLayout.SOUTH;
 		}
 		return null;
 	}
 
+	/**
+	 * Create the menu bar
+	 */
 	private void createMenuBar() {
 		setJMenuBar(menu = new MenuBar());
 	}
 
+	/**
+	 * Create the containers for the components and add them to the window
+	 */
 	private void addContainers(){
 		containers[CENTER]	= new JPanel(new GridBagLayout());
 		containers[NORTH]	= new JPanel();
@@ -193,7 +237,7 @@ public class MainWindow extends JFrame {
 		containers[EAST].setLayout(new BoxLayout(containers[EAST], BoxLayout.X_AXIS));
 		containers[WEST].setLayout(new BoxLayout(containers[WEST], BoxLayout.X_AXIS));
 		
-		containers[CENTER].setBorder(BorderFactory.createLineBorder(ToolBar.BORDER_COLOR, 1));
+		containers[CENTER].setBorder(BorderFactory.createLineBorder(Toolbar.BORDER_COLOR, 1));
 		
 		Container pane = getContentPane();
 		pane.add(containers[CENTER], BorderLayout.CENTER);
@@ -213,21 +257,30 @@ public class MainWindow extends JFrame {
 		canvas.init();
 	}
 
+	/**
+	 * Create the canvas settings window (toolbar)
+	 */
 	private void createCanvasSettings() {
 		canvasSettings = new CanvasSettings(this);
 	}
 
 	/**
-	 * Create the tool box
+	 * Create the tool box window (toolbar)
 	 */
 	private void createToolBox(){
 		toolbox = new ToolBox(this);
 	}
 
+	/**
+	 * Create the properties window (toolbar)
+	 */
 	private void craeteProperties() {
 		properties = new Properties(this);
 	}
 
+	/**
+	 * Create the time line window (toolbar)
+	 */
 	private void createTimeLine() {
 		timeLine = new TimeLine(this);
 	}

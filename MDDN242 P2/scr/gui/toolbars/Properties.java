@@ -1,10 +1,12 @@
 package gui.toolbars;
 
+import gui.Toolbar;
+
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
 
-public class Properties extends ToolBar{
+public class Properties extends Toolbar{
 
 	private static final long serialVersionUID = -57333252299444276L;
 	
