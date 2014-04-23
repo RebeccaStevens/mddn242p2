@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
@@ -33,6 +34,8 @@ public abstract class Toolbar extends JPanel {
 	 */
 	private Point lastDrag;
 
+	private JPanel content;
+
 	public Toolbar(Frame parentFrame, boolean popupEnable){
 		setLayout(new BorderLayout(0, 0));
 		setBorder(BorderFactory.createLineBorder(BORDER_COLOR, 1));
@@ -41,6 +44,13 @@ public abstract class Toolbar extends JPanel {
 		if(popupEnable){
 			createPopup(parentFrame);
 		}
+		content = new JPanel();
+		content.setOpaque(false);
+		add(content, BorderLayout.CENTER);
+	}
+	
+	protected Container getContentContainer(){
+		return content;
 	}
 
 	/**
