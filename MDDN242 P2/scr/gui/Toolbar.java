@@ -20,6 +20,8 @@ public abstract class Toolbar extends JPanel {
 
 	private static final long serialVersionUID = -5998480583258246438L;
 	
+	private static final int titleBarHeight = 8;
+	
 	public static final Color BG_COLOR = new Color(83, 83, 83);
 	public static final Color BORDER_COLOR = new Color(20, 20, 20);
 	public static final Color TITLEBAR_BG_COLOR = new Color(53, 53, 53);
@@ -117,6 +119,12 @@ public abstract class Toolbar extends JPanel {
 		window.revalidate();
 		window.repaint();
 	}
+	
+	@Override
+	public void setPreferredSize(Dimension preferredSize) {
+		preferredSize.height += titleBarHeight;
+		super.setPreferredSize(preferredSize);
+	}
 
 	/**
 	 * Call this when the mouse starts to drag the popup window.
@@ -157,6 +165,8 @@ public abstract class Toolbar extends JPanel {
 		dock(xOnScreen, yOnScreen);	// try and dock the toolbar
 	}
 	
+	
+	
 	/**
 	 * The bit of the toolbar that can be dragged.
 	 * 
@@ -167,7 +177,7 @@ public abstract class Toolbar extends JPanel {
 		private static final long serialVersionUID = 6643322416059228945L;
 
 		public TitleBar(){
-			setPreferredSize(new Dimension(32, 8));
+			setPreferredSize(new Dimension(32, titleBarHeight));
 			setBackground(TITLEBAR_BG_COLOR);
 			
 			DragEventListener dl = new DragEventListener();

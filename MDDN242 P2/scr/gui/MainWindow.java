@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
@@ -21,6 +22,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
+
+import main.Tool;
 
 public class MainWindow extends JFrame {
 
@@ -93,7 +96,7 @@ public class MainWindow extends JFrame {
 	/**
 	 * Dock the given toolbar to the given position.
 	 * @param toolbar The toolbar to dock
-	 * @param position The position to dock the toolbar in.
+	 * @param position The position to dock the toolbar in;
 	 * Valid options: BorderLayout.NORTH, BorderLayout.EAST, BorderLayout.SOUTH, BorderLayout.WEST
 	 * @return true if the toolbar was docked, otherwise false
 	 */
@@ -103,12 +106,12 @@ public class MainWindow extends JFrame {
 			containers[NORTH].add(toolbar, position);
 		}
 		else if(toolbar.canDockEast() && position.equals(BorderLayout.EAST)){
-			containers[EAST].add(Box.createHorizontalStrut(-1));
-			containers[EAST].add(toolbar, position);
+			containers[EAST].add(toolbar, position, 0);
+			containers[EAST].add(Box.createHorizontalStrut(-1), 1);
 		}
 		else if(toolbar.canDockSouth() && position.equals(BorderLayout.SOUTH)){
-			containers[SOUTH].add(Box.createVerticalStrut(-1));
-			containers[SOUTH].add(toolbar, position);
+			containers[SOUTH].add(toolbar, position, 0);
+			containers[SOUTH].add(Box.createVerticalStrut(-1), 1);
 		}
 		else if(toolbar.canDockWest() && position.equals(BorderLayout.WEST)){
 			containers[WEST].add(Box.createHorizontalStrut(-1));
@@ -129,7 +132,7 @@ public class MainWindow extends JFrame {
 	 * @param toolbar The toolbar being undocked
 	 */
 	void undock(Toolbar toolbar){
-		removeUnneedStrut(toolbar);
+		removeExtraStrut(toolbar);
 	}
 	
 	/**
@@ -164,29 +167,48 @@ public class MainWindow extends JFrame {
 		&& y <= windowLocation.y + insets.top + containers[NORTH].getHeight() + menuHeight + dist){
 			return BorderLayout.NORTH;
 		} else
-		if(x >= windowLocation.x + insets.left - containers[SOUTH].getHeight()
-		&& x <= windowLocation.x + insets.left - containers[SOUTH].getHeight() + windowSize.width
-		&& y <= windowLocation.y - insets.bottom + windowSize.height
-		&& y >= windowLocation.y - insets.bottom + windowSize.height - dist){
+		if(x >= windowLocation.x + insets.left
+		&& x <= windowLocation.x + insets.left + windowSize.width
+		&& y <= windowLocation.y - insets.bottom - containers[SOUTH].getHeight() + windowSize.height
+		&& y >= windowLocation.y - insets.bottom - containers[SOUTH].getHeight() + windowSize.height - dist){
 			return BorderLayout.SOUTH;
 		}
 		return null;
 	}
 
-	private void removeUnneedStrut(Toolbar toolbar) {
-		Container p = toolbar.getParent();
-		if(p == null) return;
+	private void removeExtraStrut(Toolbar toolbar) {
+		removeExtraStrutBefore(toolbar);
+		removeExtraStrutAfter(toolbar);
+	}
+
+	private void removeExtraStrutBefore(Toolbar toolbar) {
+		Container parent = toolbar.getParent();
+		if(parent == null) return;
+		Component[] comps = parent.getComponents();
 		
-		Component[] comps = p.getComponents();
 		int i = 0;
 		for(; i<comps.length; i++){
 			if(comps[i] == toolbar) break;
 		}
-
 		if(i < 1) return;
 		if(comps[i-1].getClass() != Box.Filler.class) return;
 		
-		p.remove(i-1);
+		parent.remove(i-1);
+	}
+	
+	private void removeExtraStrutAfter(Toolbar toolbar) {
+		Container parent = toolbar.getParent();
+		if(parent == null) return;
+		Component[] comps = parent.getComponents();
+		
+		int i = comps.length-1;
+		for(; i>=0; i--){
+			if(comps[i] == toolbar) break;
+		}
+		if(i == comps.length-1) return;
+		if(comps[i+1].getClass() != Box.Filler.class) return;
+		
+		parent.remove(i+1);
 	}
 
 	/**
@@ -235,6 +257,8 @@ public class MainWindow extends JFrame {
 		containers[WEST]	= new JPanel();
 		
 		containers[CENTER].setOpaque(false);
+		setCanvasCursor(Tool.getCurrentTool().getCursor());
+				
 		containers[NORTH].setLayout(new BoxLayout(containers[NORTH], BoxLayout.Y_AXIS));
 		containers[SOUTH].setLayout(new BoxLayout(containers[SOUTH], BoxLayout.Y_AXIS));
 		containers[EAST].setLayout(new BoxLayout(containers[EAST], BoxLayout.X_AXIS));
@@ -286,5 +310,9 @@ public class MainWindow extends JFrame {
 	 */
 	private void createTimeLine() {
 		timeLine = new TimeLine(this);
+	}
+
+	public void setCanvasCursor(Cursor cursor) {
+		containers[CENTER].setCursor(cursor);
 	}
 }
