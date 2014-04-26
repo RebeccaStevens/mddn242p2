@@ -25,12 +25,12 @@ public abstract class Toolbar extends JPanel {
 	public static final Color TITLEBAR_BG_COLOR = new Color(53, 53, 53);
 
 	/**
-	 * The independent window the toolbar can be displayed in
+	 * The independent window the toolbar can be displayed in.
 	 */
 	private JDialog popup;
 	
 	/**
-	 * The last position of the mouse when dragging the window 
+	 * The last position of the mouse when dragging the window.
 	 */
 	private Point lastDrag;
 
@@ -49,12 +49,28 @@ public abstract class Toolbar extends JPanel {
 		add(content, BorderLayout.CENTER);
 	}
 	
+	public boolean canDockNorth(){
+		return true;
+	}
+	
+	public boolean canDockSouth(){
+		return true;
+	}
+	
+	public boolean canDockEast(){
+		return true;
+	}
+	
+	public boolean canDockWest(){
+		return true;
+	}
+	
 	protected Container getContentContainer(){
 		return content;
 	}
 
 	/**
-	 * Will close the toolbar.
+	 * Close the toolbar.
 	 */
 	public void close(){
 		if(popup == null) return;
@@ -62,7 +78,7 @@ public abstract class Toolbar extends JPanel {
 	}
 
 	/**
-	 * Create the popup window
+	 * Create the popup window.
 	 * @param parentFrame
 	 */
 	private void createPopup(Frame parentFrame) {
@@ -75,7 +91,7 @@ public abstract class Toolbar extends JPanel {
 	}
 	
 	/**
-	 * Dock me
+	 * Try and dock me.
 	 * @param mouseX The mouse X position
 	 * @param mouseY The mouse Y position
 	 */
@@ -87,7 +103,7 @@ public abstract class Toolbar extends JPanel {
 	}
 	
 	/**
-	 * Undock me
+	 * Undock me.
 	 */
 	private void undock(){
 		MainWindow window = Main.getMainWindow();
@@ -103,7 +119,7 @@ public abstract class Toolbar extends JPanel {
 	}
 
 	/**
-	 * Call this when the mouse starts to drag the popup window 
+	 * Call this when the mouse starts to drag the popup window.
 	 * @param mouseX
 	 * @param mouseY
 	 */
@@ -121,7 +137,7 @@ public abstract class Toolbar extends JPanel {
 	}
 
 	/**
-	 * Call this on each update as the mouse drags the popup
+	 * Call this on each update as the mouse drags the popup.
 	 * @param mouseX
 	 * @param mouseY
 	 */
@@ -133,7 +149,7 @@ public abstract class Toolbar extends JPanel {
 	}
 
 	/**
-	 * Call this when the mouse stops dragging the popup window
+	 * Call this when the mouse stops dragging the popup window.
 	 * @param xOnScreen The mouse's x position on the screen
 	 * @param yOnScreen The mouse's y position on the screen
 	 */
@@ -142,7 +158,7 @@ public abstract class Toolbar extends JPanel {
 	}
 	
 	/**
-	 * The bit of the toolbar that can be dragged
+	 * The bit of the toolbar that can be dragged.
 	 * 
 	 * @author Mike Stevens
 	 */

@@ -36,7 +36,7 @@ public class MainWindow extends JFrame {
 
 	private MenuBar menu;
 	
-	private JPanel[] containers = new JPanel[5];
+	private JPanel[] containers;
 	private Canvas canvas;
 
 	// toolbars
@@ -87,8 +87,7 @@ public class MainWindow extends JFrame {
 	public boolean dock(Toolbar toolbar, int mouseX, int mouseY) {
 		String dockPosition = getDockingLocation(mouseX, mouseY);
 		if(dockPosition == null) return false;
-		dock(toolbar, dockPosition);
-		return true;
+		return dock(toolbar, dockPosition);
 	}
 	
 	/**
@@ -96,29 +95,31 @@ public class MainWindow extends JFrame {
 	 * @param toolbar The toolbar to dock
 	 * @param position The position to dock the toolbar in.
 	 * Valid options: BorderLayout.NORTH, BorderLayout.EAST, BorderLayout.SOUTH, BorderLayout.WEST
+	 * @return true if the toolbar was docked, otherwise false
 	 */
-	public void dock(Toolbar toolbar, String position) {
-		if(position == BorderLayout.NORTH){
+	public boolean dock(Toolbar toolbar, String position) {
+		if(toolbar.canDockNorth() && position.equals(BorderLayout.NORTH)){
 			containers[NORTH].add(Box.createVerticalStrut(-1));
 			containers[NORTH].add(toolbar, position);
 		}
-		else if(position == BorderLayout.EAST){
+		else if(toolbar.canDockEast() && position.equals(BorderLayout.EAST)){
 			containers[EAST].add(Box.createHorizontalStrut(-1));
 			containers[EAST].add(toolbar, position);
 		}
-		else if(position == BorderLayout.SOUTH){
+		else if(toolbar.canDockSouth() && position.equals(BorderLayout.SOUTH)){
 			containers[SOUTH].add(Box.createVerticalStrut(-1));
 			containers[SOUTH].add(toolbar, position);
 		}
-		else if(position == BorderLayout.WEST){
+		else if(toolbar.canDockWest() && position.equals(BorderLayout.WEST)){
 			containers[WEST].add(Box.createHorizontalStrut(-1));
 			containers[WEST].add(toolbar, position);
 		}
 		else{
-			return;
+			return false;
 		}
 		revalidate();
 		repaint();
+		return true;
 	}
 	
 	/**
@@ -131,6 +132,47 @@ public class MainWindow extends JFrame {
 		removeUnneedStrut(toolbar);
 	}
 	
+	/**
+	 * Returns the dock location that the (x, y) point is next to. 
+	 * @param x The x position of the point to test
+	 * @param y The y position of the point to test
+	 * @return BorderLayout.NORTH, BorderLayout.EAST, BorderLayout.SOUTH, BorderLayout.WEST or null
+	 */
+	private String getDockingLocation(int x, int y){
+		final int dist = 24;
+		
+		int menuHeight = menu.getHeight();
+		Insets insets = getInsets();
+		Point windowLocation = getLocationOnScreen();
+		Dimension windowSize = getSize();
+		
+		if(x >= windowLocation.x + insets.left + containers[WEST].getWidth()
+		&& x <= windowLocation.x + insets.left + containers[WEST].getWidth() + dist
+		&& y >= windowLocation.y + insets.top + menuHeight + containers[CENTER].getY()
+		&& y <= windowLocation.y + insets.top + menuHeight + containers[CENTER].getY() + containers[CENTER].getHeight()){
+			return BorderLayout.WEST;
+		} else
+		if(x <= windowLocation.x - insets.right - containers[EAST].getWidth() + windowSize.width
+		&& x >= windowLocation.x - insets.right - containers[EAST].getWidth() + windowSize.width - dist
+		&& y >= windowLocation.y + insets.top + menuHeight + containers[CENTER].getY()
+		&& y <= windowLocation.y + insets.top + menuHeight + containers[CENTER].getY() + containers[CENTER].getHeight()){
+			return BorderLayout.EAST;
+		} else
+		if(x >= windowLocation.x + insets.left
+		&& x <= windowLocation.x + insets.left + windowSize.width
+		&& y >= windowLocation.y + insets.top + containers[NORTH].getHeight() + menuHeight
+		&& y <= windowLocation.y + insets.top + containers[NORTH].getHeight() + menuHeight + dist){
+			return BorderLayout.NORTH;
+		} else
+		if(x >= windowLocation.x + insets.left - containers[SOUTH].getHeight()
+		&& x <= windowLocation.x + insets.left - containers[SOUTH].getHeight() + windowSize.width
+		&& y <= windowLocation.y - insets.bottom + windowSize.height
+		&& y >= windowLocation.y - insets.bottom + windowSize.height - dist){
+			return BorderLayout.SOUTH;
+		}
+		return null;
+	}
+
 	private void removeUnneedStrut(Toolbar toolbar) {
 		Container p = toolbar.getParent();
 		if(p == null) return;
@@ -174,47 +216,6 @@ public class MainWindow extends JFrame {
 	}
 	
 	/**
-	 * Returns the dock location that the (x, y) point is next to. 
-	 * @param x The x position of the point to test
-	 * @param y The y position of the point to test
-	 * @return BorderLayout.NORTH, BorderLayout.EAST, BorderLayout.SOUTH, BorderLayout.WEST or null
-	 */
-	private String getDockingLocation(int x, int y){
-		final int dist = 24;
-		
-		int menuHeight = menu.getHeight();
-		Insets insets = getInsets();
-		Point windowLocation = getLocationOnScreen();
-		Dimension windowSize = getSize();
-		
-		if(x > windowLocation.x + insets.left + containers[WEST].getWidth()
-		&& x < windowLocation.x + insets.left + containers[WEST].getWidth() + dist
-		&& y > windowLocation.y + insets.top + menuHeight + containers[CENTER].getY()
-		&& y < windowLocation.y + insets.top + menuHeight + containers[CENTER].getY() + containers[CENTER].getHeight()){
-			return BorderLayout.WEST;
-		} else
-		if(x < windowLocation.x - insets.right - containers[EAST].getWidth() + windowSize.width
-		&& x > windowLocation.x - insets.right - containers[EAST].getWidth() + windowSize.width - dist
-		&& y > windowLocation.y + insets.top + menuHeight + containers[CENTER].getY()
-		&& y < windowLocation.y + insets.top + menuHeight + containers[CENTER].getY() + containers[CENTER].getHeight()){
-			return BorderLayout.EAST;
-		} else
-		if(x > windowLocation.x + insets.left
-		&& x < windowLocation.x + insets.left + windowSize.width
-		&& y > windowLocation.y + insets.top + containers[NORTH].getHeight() + menuHeight
-		&& y < windowLocation.y + insets.top + containers[NORTH].getHeight() + menuHeight + dist){
-			return BorderLayout.NORTH;
-		} else
-		if(x > windowLocation.x + insets.left - containers[SOUTH].getHeight()
-		&& x < windowLocation.x + insets.left - containers[SOUTH].getHeight() + windowSize.width
-		&& y < windowLocation.y - insets.bottom + windowSize.height
-		&& y > windowLocation.y - insets.bottom + windowSize.height - dist){
-			return BorderLayout.SOUTH;
-		}
-		return null;
-	}
-
-	/**
 	 * Create the menu bar
 	 */
 	private void createMenuBar() {
@@ -225,6 +226,8 @@ public class MainWindow extends JFrame {
 	 * Create the containers for the components and add them to the window
 	 */
 	private void addContainers(){
+		containers = new JPanel[5];
+		
 		containers[CENTER]	= new JPanel(new GridBagLayout());
 		containers[NORTH]	= new JPanel();
 		containers[EAST]	= new JPanel();

@@ -19,4 +19,24 @@ public class CanvasSettings extends Toolbar{
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 	}
+
+	@Override
+	public boolean canDockNorth(){
+		return true;
+	}
+
+	@Override
+	public boolean canDockSouth(){
+		return false;
+	}
+
+	@Override
+	public boolean canDockEast(){
+		return false;
+	}
+
+	@Override
+	public boolean canDockWest(){
+		return false;
+	}
 }

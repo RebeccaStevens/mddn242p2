@@ -31,4 +31,24 @@ public class ToolBox extends Toolbar{
 		content.add(new Button("data/buttons/toolbox_move0.png", "data/buttons/toolbox_move1.png", "data/buttons/toolbox_move2.png"));
 		content.add(new Button("data/buttons/toolbox_move0.png", "data/buttons/toolbox_move1.png", "data/buttons/toolbox_move2.png"));
 	}
+
+	@Override
+	public boolean canDockNorth(){
+		return false;
+	}
+
+	@Override
+	public boolean canDockSouth(){
+		return false;
+	}
+
+	@Override
+	public boolean canDockEast(){
+		return true;
+	}
+
+	@Override
+	public boolean canDockWest(){
+		return true;
+	}
 }

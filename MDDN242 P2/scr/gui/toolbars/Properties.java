@@ -19,4 +19,24 @@ public class Properties extends Toolbar{
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 	}
+
+	@Override
+	public boolean canDockNorth(){
+		return false;
+	}
+
+	@Override
+	public boolean canDockSouth(){
+		return false;
+	}
+
+	@Override
+	public boolean canDockEast(){
+		return true;
+	}
+
+	@Override
+	public boolean canDockWest(){
+		return true;
+	}
 }
