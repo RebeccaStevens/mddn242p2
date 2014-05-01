@@ -52,6 +52,11 @@ public class MenuBar extends JMenuBar {
 		private void addNewItem() {
 			JMenuItem item = new JMenuItem("New", 'n');
 			item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+			item.addActionListener(new ActionListener() {
+				@Override public void actionPerformed(ActionEvent e) {
+					Main.getMainWindow().displayNewWindow();
+				}
+			});
 			add(item);
 		}
 

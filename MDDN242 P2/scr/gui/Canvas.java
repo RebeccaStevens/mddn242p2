@@ -9,8 +9,7 @@ public class Canvas extends PApplet{
 	private final int w, h;
 	
 	public Canvas(){
-		w = 640;
-		h = 480;
+		this(640, 480);
 	}
 
 	public Canvas(int width, int height){

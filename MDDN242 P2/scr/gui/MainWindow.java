@@ -1,6 +1,7 @@
 package gui;
 
 import gui.toolbars.CanvasSettings;
+import gui.toolbars.Outline;
 import gui.toolbars.Properties;
 import gui.toolbars.TimeLine;
 import gui.toolbars.ToolBox;
@@ -46,12 +47,15 @@ public class MainWindow extends JFrame {
 	private CanvasSettings canvasSettings;
 	private ToolBox toolbox;
 	private Properties properties;
+	private Outline outline;
 	private TimeLine timeLine;
 
 	/**
 	 * Create this (the window)
 	 */
 	public MainWindow(){
+		setupLookAndFeel();
+		
 		setTitle("Particle Creator");
 		setSize(1280, 900);
 		setMinimumSize(new Dimension(1024, 768));
@@ -68,9 +72,10 @@ public class MainWindow extends JFrame {
 		createCanvasSettings();
 		createToolBox();
 		craeteProperties();
+		craeteOutline();
 		createTimeLine();
 		
-		createCanvas(640, 480);
+		//createCanvas(640, 480);
 
 		addComponents();
 		
@@ -78,7 +83,11 @@ public class MainWindow extends JFrame {
 		setLocationRelativeTo(null);	// center the window on the screen
 		setVisible(true);				// display the window
 	}
-	
+
+	public void displayNewWindow() {
+		NewWindow nw = new NewWindow(this);
+	}
+
 	/**
 	 * Dock the given toolbar into is window based on the given mouse x and y location given.
 	 * The toolbar will not be docked if the given mouse location is not within a docking area.
@@ -90,7 +99,12 @@ public class MainWindow extends JFrame {
 	public boolean dock(Toolbar toolbar, int mouseX, int mouseY) {
 		String dockPosition = getDockingLocation(mouseX, mouseY);
 		if(dockPosition == null) return false;
-		return dock(toolbar, dockPosition);
+		if(dock(toolbar, dockPosition)){
+			revalidate();
+			repaint();
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -120,8 +134,6 @@ public class MainWindow extends JFrame {
 		else{
 			return false;
 		}
-		revalidate();
-		repaint();
 		return true;
 	}
 	
@@ -215,10 +227,13 @@ public class MainWindow extends JFrame {
 	 * Add the components to their default containers
 	 */
 	private void addComponents(){
-		containers[NORTH].add(canvasSettings);
-		containers[SOUTH].add(timeLine);
-		containers[EAST].add(properties);
-		containers[WEST].add(toolbox);
+		dock(canvasSettings, BorderLayout.NORTH);
+		dock(timeLine, BorderLayout.SOUTH);
+		dock(properties, BorderLayout.EAST);
+		dock(outline, BorderLayout.EAST);
+		dock(toolbox, BorderLayout.WEST);
+		revalidate();
+		repaint();
 	}
 	
 	/**
@@ -228,6 +243,7 @@ public class MainWindow extends JFrame {
 	public void resetPerspective(){
 		canvasSettings.close();
 		properties.close();
+		outline.close();
 		timeLine.close();
 		toolbox.close();
 		
@@ -304,6 +320,13 @@ public class MainWindow extends JFrame {
 	private void craeteProperties() {
 		properties = new Properties(this);
 	}
+	
+	/**
+	 * Create the outline window (toolbar)
+	 */
+	private void craeteOutline() {
+		outline = new Outline(this);
+	}
 
 	/**
 	 * Create the time line window (toolbar)
@@ -314,5 +337,18 @@ public class MainWindow extends JFrame {
 
 	public void setCanvasCursor(Cursor cursor) {
 		containers[CENTER].setCursor(cursor);
+	}
+
+	private void setupLookAndFeel() {
+		try {
+			if(System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0){
+				javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			}
+			else{
+				javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			}
+	    } catch (Exception e) {
+	    	// TODO
+	    }
 	}
 }

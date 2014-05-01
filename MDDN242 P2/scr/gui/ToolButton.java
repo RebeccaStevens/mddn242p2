@@ -39,6 +39,7 @@ public class ToolButton extends JToggleButton {
 		
 		setBorderPainted(false);
 		setContentAreaFilled(false);
+		setFocusPainted(false);
 		
 		setPreferredSize(new Dimension(32, 32));
 		
