@@ -1,5 +1,6 @@
 package main;
 
+import gui.Canvas;
 import gui.MainWindow;
 
 import javax.swing.SwingUtilities;
@@ -14,6 +15,10 @@ public class Main {
 		return window;
 	}
 
+	public static Canvas getCanvas() {
+		return window.getCanvas();
+	}
+
 	/**
 	 * Run the program
 	 * @param args
@@ -25,5 +30,9 @@ public class Main {
 				window = new MainWindow();
 			}
 		});
+	}
+
+	public static void createNewCanvas(int width, int height) {
+		window.createNewCanvas(width, height);
 	}
 }

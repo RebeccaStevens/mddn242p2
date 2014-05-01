@@ -15,8 +15,8 @@ import main.tools.Move;
 public class ToolBox extends Toolbar{
 
 	private static final long serialVersionUID = -57333252299444276L;
-	private ToolButton moveTool;
-	private ToolButton emitterTool;
+	private ToolButton moveTool_btn;
+	private ToolButton emitterTool_btn;
 	
 	public ToolBox(Frame parentFrame){
 		super(parentFrame, true);
@@ -32,11 +32,11 @@ public class ToolBox extends Toolbar{
 	private void addButtons(){
 		Container content = getContentContainer();
 		content.setLayout(new FlowLayout(FlowLayout.LEFT, 4, 4));
-		content.add(moveTool	= new ToolButton(Move.tool, "data/buttons/toolbox_move0.png", "data/buttons/toolbox_move1.png", "data/buttons/toolbox_move2.png"));
-		content.add(emitterTool	= new ToolButton(Emitter.tool, "data/buttons/placeholder0.png",  "data/buttons/placeholder1.png",  "data/buttons/placeholder2.png"));
+		content.add(moveTool_btn	= new ToolButton(Move.tool, "data/buttons/toolbox_move0.png", "data/buttons/toolbox_move1.png", "data/buttons/toolbox_move2.png"));
+		content.add(emitterTool_btn	= new ToolButton(Emitter.tool, "data/buttons/placeholder0.png",  "data/buttons/placeholder1.png",  "data/buttons/placeholder2.png"));
 		content.add(new ToolButton(null, "data/buttons/placeholder0.png",  "data/buttons/placeholder1.png",  "data/buttons/placeholder2.png"));
 		
-		moveTool.setSelected(true);
+		moveTool_btn.setSelected(true);
 	}
 
 	@Override

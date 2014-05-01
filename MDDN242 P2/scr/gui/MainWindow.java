@@ -13,9 +13,13 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -24,6 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import processing.core.PApplet;
 import main.Tool;
 
 public class MainWindow extends JFrame {
@@ -31,7 +36,7 @@ public class MainWindow extends JFrame {
 	private static final long serialVersionUID = -4580460675035694517L;
 
 	private static final Color BG_COLOR = new Color(40, 40, 40);
-	
+
 	private static final int CENTER = 0;
 	private static final int NORTH = 1;
 	private static final int EAST = 2;
@@ -39,7 +44,7 @@ public class MainWindow extends JFrame {
 	private static final int WEST = 4;
 
 	private MenuBar menu;
-	
+
 	private JPanel[] containers;
 	private Canvas canvas;
 
@@ -55,37 +60,36 @@ public class MainWindow extends JFrame {
 	 */
 	public MainWindow(){
 		setupLookAndFeel();
-		
+
 		setTitle("Particle Creator");
 		setSize(1280, 900);
 		setMinimumSize(new Dimension(1024, 768));
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		
+
 		// create content pane
 		JPanel content = new JPanel(new BorderLayout(-1, -1), true);
 		content.setBackground(BG_COLOR);
 		setContentPane(content);
 
 		addContainers();
-		
+
 		createMenuBar();
 		createCanvasSettings();
 		createToolBox();
 		craeteProperties();
 		craeteOutline();
 		createTimeLine();
-		
-		//createCanvas(640, 480);
 
 		addComponents();
-		
+		setupIcon();
+
 		setExtendedState(getExtendedState() | Frame.MAXIMIZED_BOTH);	// maximize the window
 		setLocationRelativeTo(null);	// center the window on the screen
 		setVisible(true);				// display the window
 	}
 
 	public void displayNewWindow() {
-		NewWindow nw = new NewWindow(this);
+		new NewWindow(this);
 	}
 
 	/**
@@ -106,7 +110,7 @@ public class MainWindow extends JFrame {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Dock the given toolbar to the given position.
 	 * @param toolbar The toolbar to dock
@@ -136,7 +140,7 @@ public class MainWindow extends JFrame {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Undock the given toolbar from the window.
 	 * This method should be called from the toolbar class when undocking the toolbar
@@ -146,7 +150,7 @@ public class MainWindow extends JFrame {
 	void undock(Toolbar toolbar){
 		removeExtraStrut(toolbar);
 	}
-	
+
 	/**
 	 * Returns the dock location that the (x, y) point is next to. 
 	 * @param x The x position of the point to test
@@ -155,36 +159,36 @@ public class MainWindow extends JFrame {
 	 */
 	private String getDockingLocation(int x, int y){
 		final int dist = 24;
-		
+
 		int menuHeight = menu.getHeight();
 		Insets insets = getInsets();
 		Point windowLocation = getLocationOnScreen();
 		Dimension windowSize = getSize();
-		
+
 		if(x >= windowLocation.x + insets.left + containers[WEST].getWidth()
-		&& x <= windowLocation.x + insets.left + containers[WEST].getWidth() + dist
-		&& y >= windowLocation.y + insets.top + menuHeight + containers[CENTER].getY()
-		&& y <= windowLocation.y + insets.top + menuHeight + containers[CENTER].getY() + containers[CENTER].getHeight()){
+				&& x <= windowLocation.x + insets.left + containers[WEST].getWidth() + dist
+				&& y >= windowLocation.y + insets.top + menuHeight + containers[CENTER].getY()
+				&& y <= windowLocation.y + insets.top + menuHeight + containers[CENTER].getY() + containers[CENTER].getHeight()){
 			return BorderLayout.WEST;
 		} else
-		if(x <= windowLocation.x - insets.right - containers[EAST].getWidth() + windowSize.width
-		&& x >= windowLocation.x - insets.right - containers[EAST].getWidth() + windowSize.width - dist
-		&& y >= windowLocation.y + insets.top + menuHeight + containers[CENTER].getY()
-		&& y <= windowLocation.y + insets.top + menuHeight + containers[CENTER].getY() + containers[CENTER].getHeight()){
-			return BorderLayout.EAST;
-		} else
-		if(x >= windowLocation.x + insets.left
-		&& x <= windowLocation.x + insets.left + windowSize.width
-		&& y >= windowLocation.y + insets.top + containers[NORTH].getHeight() + menuHeight
-		&& y <= windowLocation.y + insets.top + containers[NORTH].getHeight() + menuHeight + dist){
-			return BorderLayout.NORTH;
-		} else
-		if(x >= windowLocation.x + insets.left
-		&& x <= windowLocation.x + insets.left + windowSize.width
-		&& y <= windowLocation.y - insets.bottom - containers[SOUTH].getHeight() + windowSize.height
-		&& y >= windowLocation.y - insets.bottom - containers[SOUTH].getHeight() + windowSize.height - dist){
-			return BorderLayout.SOUTH;
-		}
+			if(x <= windowLocation.x - insets.right - containers[EAST].getWidth() + windowSize.width
+			&& x >= windowLocation.x - insets.right - containers[EAST].getWidth() + windowSize.width - dist
+			&& y >= windowLocation.y + insets.top + menuHeight + containers[CENTER].getY()
+			&& y <= windowLocation.y + insets.top + menuHeight + containers[CENTER].getY() + containers[CENTER].getHeight()){
+				return BorderLayout.EAST;
+			} else
+				if(x >= windowLocation.x + insets.left
+				&& x <= windowLocation.x + insets.left + windowSize.width
+				&& y >= windowLocation.y + insets.top + containers[NORTH].getHeight() + menuHeight
+				&& y <= windowLocation.y + insets.top + containers[NORTH].getHeight() + menuHeight + dist){
+					return BorderLayout.NORTH;
+				} else
+					if(x >= windowLocation.x + insets.left
+					&& x <= windowLocation.x + insets.left + windowSize.width
+					&& y <= windowLocation.y - insets.bottom - containers[SOUTH].getHeight() + windowSize.height
+					&& y >= windowLocation.y - insets.bottom - containers[SOUTH].getHeight() + windowSize.height - dist){
+						return BorderLayout.SOUTH;
+					}
 		return null;
 	}
 
@@ -197,29 +201,29 @@ public class MainWindow extends JFrame {
 		Container parent = toolbar.getParent();
 		if(parent == null) return;
 		Component[] comps = parent.getComponents();
-		
+
 		int i = 0;
 		for(; i<comps.length; i++){
 			if(comps[i] == toolbar) break;
 		}
 		if(i < 1) return;
 		if(comps[i-1].getClass() != Box.Filler.class) return;
-		
+
 		parent.remove(i-1);
 	}
-	
+
 	private void removeExtraStrutAfter(Toolbar toolbar) {
 		Container parent = toolbar.getParent();
 		if(parent == null) return;
 		Component[] comps = parent.getComponents();
-		
+
 		int i = comps.length-1;
 		for(; i>=0; i--){
 			if(comps[i] == toolbar) break;
 		}
 		if(i == comps.length-1) return;
 		if(comps[i+1].getClass() != Box.Filler.class) return;
-		
+
 		parent.remove(i+1);
 	}
 
@@ -235,7 +239,7 @@ public class MainWindow extends JFrame {
 		revalidate();
 		repaint();
 	}
-	
+
 	/**
 	 * Reset the window's perspective.
 	 * All tool bars are put back to their default positions
@@ -246,13 +250,13 @@ public class MainWindow extends JFrame {
 		outline.close();
 		timeLine.close();
 		toolbox.close();
-		
+
 		addComponents();
-		
+
 		revalidate();
 		repaint();
 	}
-	
+
 	/**
 	 * Create the menu bar
 	 */
@@ -265,22 +269,30 @@ public class MainWindow extends JFrame {
 	 */
 	private void addContainers(){
 		containers = new JPanel[5];
-		
-		containers[CENTER]	= new JPanel(new GridBagLayout());
-		containers[NORTH]	= new JPanel();
+
+		containers[CENTER]	= new JPanel(null);	// absolute layout
+		containers[NORTH]	= new JPanel();		// flow layout
 		containers[EAST]	= new JPanel();
 		containers[SOUTH]	= new JPanel();
 		containers[WEST]	= new JPanel();
-		
+
 		containers[CENTER].setOpaque(false);
 		setCanvasCursor(Tool.getCurrentTool().getCursor());
-				
+
 		containers[NORTH].setLayout(new BoxLayout(containers[NORTH], BoxLayout.Y_AXIS));
 		containers[SOUTH].setLayout(new BoxLayout(containers[SOUTH], BoxLayout.Y_AXIS));
 		containers[EAST].setLayout(new BoxLayout(containers[EAST], BoxLayout.X_AXIS));
 		containers[WEST].setLayout(new BoxLayout(containers[WEST], BoxLayout.X_AXIS));
-		
+
 		containers[CENTER].setBorder(BorderFactory.createLineBorder(Toolbar.BORDER_COLOR, 1));
+		containers[CENTER].addComponentListener(new ComponentListener() {
+			@Override public void componentShown(ComponentEvent e) {}
+			@Override public void componentMoved(ComponentEvent e) {}
+			@Override public void componentHidden(ComponentEvent e) {}
+			@Override public void componentResized(ComponentEvent e) {
+				if(canvas != null) repositionCanvas();
+			}
+		});
 		
 		Container pane = getContentPane();
 		pane.add(containers[CENTER], BorderLayout.CENTER);
@@ -289,15 +301,61 @@ public class MainWindow extends JFrame {
 		pane.add(containers[SOUTH],  BorderLayout.SOUTH);
 		pane.add(containers[WEST],   BorderLayout.WEST);
 	}
-	
+
+	private void repositionCanvas() {
+		centerCanvas();
+	}
+
 	/**
 	 * Create the canvas
 	 */
-	private void createCanvas(int w, int h){
-		canvas = new Canvas(w, h);
-		// TODO remove any old canvas
-		containers[CENTER].add(canvas);
-		canvas.init();
+	private void createCanvas(int width, int height){
+		if(canvas == null){
+			canvas = new Canvas(width, height);
+			containers[CENTER].add(canvas);
+			canvas.init();
+		}
+		else{
+			//TODO remove all stuff added to the picture
+			canvas.createNewCanvas(width, height);
+		}
+	}
+
+	/**
+	 * Create a new canvas of the given dimensions
+	 */
+	public void createNewCanvas(int width, int height){
+		createCanvas(width, height);
+		
+		scaleCanvasToFit(width, height);
+		centerCanvas(width, height);
+		
+		revalidate();
+		menu.revalidate();
+		repaint();
+	}
+	
+	public void centerCanvas() {
+		centerCanvas(canvas.getImageWidth(), canvas.getImageHeight());
+	}
+
+	private void centerCanvas(int width, int height) {
+		int canvasPosX = (int) ((containers[CENTER].getWidth()  - width  * canvas.getScale()) / 2);
+		int canvasPosY = (int) ((containers[CENTER].getHeight() - height * canvas.getScale()) / 2);
+		canvas.setLocation(canvasPosX, canvasPosY);
+	}
+	
+	public void scaleCanvasToFit() {
+		scaleCanvasToFit(canvas.width, canvas.height);
+	}
+
+	private void scaleCanvasToFit(int width, int height) {
+		double xRatio = (double) width / containers[CENTER].getWidth();
+		double yRatio = (double) height / containers[CENTER].getHeight();
+		double canvasScale = 1 / ((xRatio > yRatio ? xRatio : yRatio) + 0.1);	// 0.1 is for padding
+
+		canvas.setScale((float) canvasScale);
+		canvas.size((int)(width * canvasScale), (int)(height * canvasScale));
 	}
 
 	/**
@@ -320,7 +378,7 @@ public class MainWindow extends JFrame {
 	private void craeteProperties() {
 		properties = new Properties(this);
 	}
-	
+
 	/**
 	 * Create the outline window (toolbar)
 	 */
@@ -335,6 +393,22 @@ public class MainWindow extends JFrame {
 		timeLine = new TimeLine(this);
 	}
 
+	@SuppressWarnings("deprecation")
+	private void setupIcon() {
+		List<Image> icons = new ArrayList<Image>();
+		PApplet t = new PApplet();
+		icons.add(t.loadImage("data/icons/main16.png").getImage());
+		icons.add(t.loadImage("data/icons/main24.png").getImage());
+		icons.add(t.loadImage("data/icons/main32.png").getImage());
+		icons.add(t.loadImage("data/icons/main48.png").getImage());
+		icons.add(t.loadImage("data/icons/main64.png").getImage());
+		setIconImages(icons);
+	}
+
+	public Canvas getCanvas() {
+		return canvas;
+	}
+
 	public void setCanvasCursor(Cursor cursor) {
 		containers[CENTER].setCursor(cursor);
 	}
@@ -347,8 +421,8 @@ public class MainWindow extends JFrame {
 			else{
 				javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			}
-	    } catch (Exception e) {
-	    	// TODO
-	    }
+		} catch (Exception e) {
+			// TODO
+		}
 	}
 }

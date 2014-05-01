@@ -25,7 +25,7 @@ public class MenuBar extends JMenuBar {
 	
 	private abstract class Menu extends JMenu{
 		private static final long serialVersionUID = -3107449466076134996L;
-
+		
 		protected void addSeperator(){
 			add(new JSeparator());
 		}
@@ -46,6 +46,7 @@ public class MenuBar extends JMenuBar {
 			addSeperator();
 			addExportItem();
 			addSeperator();
+			addCloseItem();
 			addExitItem();
 		}
 
@@ -81,6 +82,12 @@ public class MenuBar extends JMenuBar {
 		private void addExportItem() {
 			JMenuItem item = new JMenuItem("Export", 'e');
 			item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK | ActionEvent.ALT_MASK | ActionEvent.SHIFT_MASK));
+			add(item);
+		}
+		
+		private void addCloseItem() {
+			JMenuItem item = new JMenuItem("Close", 'c');
+			item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
 			add(item);
 		}
 

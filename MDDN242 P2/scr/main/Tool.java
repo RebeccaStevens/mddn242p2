@@ -21,7 +21,7 @@ public abstract class Tool {
 	
 	public static void setCurrentTool(Tool tool){
 		currentTool = tool;
-		Main.getMainWindow().setCanvasCursor(tool.getCursor());
+		Main.getMainWindow().setCanvasCursor(tool == null ? Cursor.getDefaultCursor() : tool.getCursor());
 	}
 
 	public abstract Cursor getCursor();

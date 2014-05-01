@@ -3,6 +3,8 @@ package gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -10,6 +12,10 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import main.Main;
 
 public class NewWindow extends JDialog {
 
@@ -20,6 +26,8 @@ public class NewWindow extends JDialog {
 	private static final Font body_font = new Font("Calibri", 0, 18);
 	private static final Font header_font = new java.awt.Font("Cambria", 0, 24);
 	
+	private final String[] presets = new String[] { "Custom...", "720p (HD)", "1080p (FHD)", "2160p (4K UHD)", "1K", "2K", "4K" };
+
 	private JButton ok_btn;
 	private JButton cancel_btn;
 	private JComboBox<String> presets_cb;
@@ -30,7 +38,9 @@ public class NewWindow extends JDialog {
 	private JSpinner width_spin;
 	private JLabel background_lbl;
 	private JComboBox<String> background_cb;
-	
+
+	private DimensionChangeListener dimensionChangeListener;
+
 	public NewWindow(Frame owner){
 		super(owner, true);
 		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -57,17 +67,55 @@ public class NewWindow extends JDialog {
 		createTerminalButtons();
 
 		layoutComponents();
+		presets_cb.setSelectedIndex(1);
 	}
 
 	private void createPresetOptions() {
 		presets_cb = new javax.swing.JComboBox<String>();
 		presets_lbl = new javax.swing.JLabel();
-		
+
 		presets_lbl.setFont(header_font);
-		presets_lbl.setText("Presets");
-	
+		presets_lbl.setText("Presets:");
+
 		presets_cb.setFont(body_font);
-		presets_cb.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "720p", "1080p", "4K" }));
+		presets_cb.setModel(new javax.swing.DefaultComboBoxModel<String>(presets));
+		presets_cb.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand().equals(presets_cb.getActionCommand())){
+					String selected = (String) presets_cb.getSelectedItem();
+					if(selected == presets[1]){ 		// 720
+						dimensionChangeListener.preventNextChange = 2;
+						width_spin.setValue(1280);
+						height_spin.setValue(720);
+					}
+					else if(selected == presets[2]){	// 1080
+						dimensionChangeListener.preventNextChange = 2;
+						width_spin.setValue(1920);
+						height_spin.setValue(1080);
+					}
+					else if(selected == presets[3]){	// 2160
+						dimensionChangeListener.preventNextChange = 2;
+						width_spin.setValue(3840);
+						height_spin.setValue(2160);
+					}
+					else if(selected == presets[4]){	// 1K
+						dimensionChangeListener.preventNextChange = 2;
+						width_spin.setValue(1024);
+						height_spin.setValue(540);
+					}
+					else if(selected == presets[5]){	// 2K
+						dimensionChangeListener.preventNextChange = 2;
+						width_spin.setValue(2048);
+						height_spin.setValue(1080);
+					}
+					else if(selected == presets[6]){	// 4K
+						dimensionChangeListener.preventNextChange = 2;
+						width_spin.setValue(4096);
+						height_spin.setValue(2160);
+					}
+				}
+			}
+		});
 	}
 
 	private void createWidthAndHeightOprions() {
@@ -76,17 +124,22 @@ public class NewWindow extends JDialog {
 		height_spin = new javax.swing.JSpinner();
 		width_spin = new javax.swing.JSpinner();
 		
+		dimensionChangeListener = new DimensionChangeListener();
+
 		width_lbl.setFont(body_font);
 		width_lbl.setText("Width:");
-	
+
 		width_spin.setFont(body_font);
 		width_spin.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
-	
+
 		height_lbl.setFont(body_font);
 		height_lbl.setText("Height:");
-	
+
 		height_spin.setFont(body_font);
 		height_spin.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+		
+		width_spin.addChangeListener(dimensionChangeListener);
+		height_spin.addChangeListener(dimensionChangeListener);
 	}
 
 	private void createBackGroundOption() {
@@ -96,18 +149,29 @@ public class NewWindow extends JDialog {
 
 		background_cb = new javax.swing.JComboBox<String>();
 		background_cb.setFont(body_font);
-		background_cb.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "Black", "White", "Transparent", "Other" }));
+		background_cb.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "Black", "White", "Other" }));
 	}
 
 	private void createTerminalButtons() {
 		ok_btn = new javax.swing.JButton();
 		cancel_btn = new javax.swing.JButton();
-		
+
 		ok_btn.setFont(body_font);
 		ok_btn.setText("OK");
+		ok_btn.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				Main.createNewCanvas((int)width_spin.getValue(), (int)height_spin.getValue());
+				NewWindow.this.dispose();
+			}
+		});
 
 		cancel_btn.setFont(body_font);
 		cancel_btn.setText("Cancel");
+		cancel_btn.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				NewWindow.this.dispose();
+			}
+		});
 	}
 
 	private void layoutComponents() {
@@ -165,7 +229,20 @@ public class NewWindow extends JDialog {
 																		.addComponent(ok_btn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 																		.addContainerGap())
 				);
-	
+
 		pack();
 	}
+	
+	
+	private class DimensionChangeListener implements ChangeListener {
+		public int preventNextChange;
+
+		@Override public void stateChanged(ChangeEvent e) {
+			if(preventNextChange > 0){
+				preventNextChange--;
+				return;
+			}
+			presets_cb.setSelectedIndex(0);
+		}
+	};
 }
