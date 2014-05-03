@@ -4,8 +4,8 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
 
-import processing.core.PApplet;
 import main.Tool;
+import processing.core.PApplet;
 
 public class Move extends Tool {
 

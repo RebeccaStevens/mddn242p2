@@ -8,6 +8,7 @@ import javax.swing.SwingUtilities;
 public class Main {
 	
 	private static MainWindow window;
+	private static Input input;
 	
 	private Main(){}
 	
@@ -18,12 +19,17 @@ public class Main {
 	public static Canvas getCanvas() {
 		return window.getCanvas();
 	}
+	
+	public static Input getInput(){
+		return input;
+	}
 
 	/**
 	 * Run the program
 	 * @param args
 	 */
 	public static void main(String[] args){
+		input = new Input();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -32,7 +38,7 @@ public class Main {
 		});
 	}
 
-	public static void createNewCanvas(int width, int height) {
-		window.createNewCanvas(width, height);
+	public static void createNewCanvas(int width, int height, int background_color) {
+		window.createNewCanvas(width, height, background_color);
 	}
 }

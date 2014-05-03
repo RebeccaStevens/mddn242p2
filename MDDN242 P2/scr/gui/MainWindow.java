@@ -29,6 +29,8 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import processing.core.PApplet;
+import main.Input;
+import main.Main;
 import main.Tool;
 
 public class MainWindow extends JFrame {
@@ -252,6 +254,9 @@ public class MainWindow extends JFrame {
 		toolbox.close();
 
 		addComponents();
+		
+		scaleCanvasToFit();
+		centerCanvas();
 
 		revalidate();
 		repaint();
@@ -294,6 +299,12 @@ public class MainWindow extends JFrame {
 			}
 		});
 		
+		Input input = Main.getInput();
+		containers[CENTER].addMouseListener(input);
+		containers[CENTER].addMouseMotionListener(input);
+		containers[CENTER].addMouseWheelListener(input);
+		containers[CENTER].addKeyListener(input);
+		
 		Container pane = getContentPane();
 		pane.add(containers[CENTER], BorderLayout.CENTER);
 		pane.add(containers[NORTH],  BorderLayout.NORTH);
@@ -303,53 +314,58 @@ public class MainWindow extends JFrame {
 	}
 
 	private void repositionCanvas() {
+		scaleCanvasToFit();
 		centerCanvas();
 	}
 
 	/**
 	 * Create the canvas
 	 */
-	private void createCanvas(int width, int height){
+	private void createCanvas(int width, int height, int background_color){
 		if(canvas == null){
-			canvas = new Canvas(width, height);
+			canvas = new Canvas(width, height, background_color);
 			containers[CENTER].add(canvas);
 			canvas.init();
 		}
 		else{
 			//TODO remove all stuff added to the picture
-			canvas.createNewCanvas(width, height);
+			canvas.createNewCanvas(width, height, background_color);
 		}
 	}
 
 	/**
 	 * Create a new canvas of the given dimensions
 	 */
-	public void createNewCanvas(int width, int height){
-		createCanvas(width, height);
+	public void createNewCanvas(int width, int height, int background_color){
+		createCanvas(width, height, background_color);
 		
-		scaleCanvasToFit(width, height);
-		centerCanvas(width, height);
+		scaleCanvasToFit();
+		centerCanvas();
 		
 		revalidate();
 		menu.revalidate();
 		repaint();
 	}
 	
-	public void centerCanvas() {
-		centerCanvas(canvas.getImageWidth(), canvas.getImageHeight());
+	public void addPan(Point pan){
+		if(canvas == null) return;
+		Point loc = canvas.getLocation();
+		canvas.setLocation(loc.x + pan.x, loc.y + pan.y);
 	}
 
-	private void centerCanvas(int width, int height) {
+	public void centerCanvas() {
+		int width = canvas.getImageWidth();
+		int height = canvas.getImageHeight();
+		
 		int canvasPosX = (int) ((containers[CENTER].getWidth()  - width  * canvas.getScale()) / 2);
 		int canvasPosY = (int) ((containers[CENTER].getHeight() - height * canvas.getScale()) / 2);
 		canvas.setLocation(canvasPosX, canvasPosY);
 	}
 	
 	public void scaleCanvasToFit() {
-		scaleCanvasToFit(canvas.width, canvas.height);
-	}
-
-	private void scaleCanvasToFit(int width, int height) {
+		int width = canvas.getImageWidth();
+		int height = canvas.getImageHeight();
+		
 		double xRatio = (double) width / containers[CENTER].getWidth();
 		double yRatio = (double) height / containers[CENTER].getHeight();
 		double canvasScale = 1 / ((xRatio > yRatio ? xRatio : yRatio) + 0.1);	// 0.1 is for padding
