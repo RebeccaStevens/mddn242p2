@@ -16,11 +16,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 
 import main.Tool;
-import main.tools.Emitter;
-import main.tools.Move;
-import main.tools.Pan;
-import main.tools.Zoom;
 import processing.core.PApplet;
+import tools.ToolEmitter;
+import tools.ToolMove;
+import tools.ToolPan;
+import tools.ToolZoom;
 
 public class ToolBox extends Toolbar{
 
@@ -46,10 +46,10 @@ public class ToolBox extends Toolbar{
 	private void addButtons(){
 		Container content = getContentContainer();
 		content.setLayout(new FlowLayout(FlowLayout.LEFT, 4, 4));
-		content.add(new ToolButton(Move.tool, "data/buttons/toolbox_move0.png", "data/buttons/toolbox_move1.png", "data/buttons/toolbox_move2.png"));
-		content.add(new ToolButton(Emitter.tool, "data/buttons/placeholder0.png",  "data/buttons/placeholder1.png",  "data/buttons/placeholder2.png"));
-		content.add(new ToolButton(Pan.tool, "data/buttons/toolbox_pan0.png",  "data/buttons/toolbox_pan1.png",  "data/buttons/toolbox_pan2.png"));
-		content.add(new ToolButton(Zoom.tool, "data/buttons/placeholder0.png",  "data/buttons/placeholder1.png",  "data/buttons/placeholder2.png"));
+		content.add(new ToolButton(ToolMove.tool, "data/buttons/toolbox_move0.png", "data/buttons/toolbox_move1.png", "data/buttons/toolbox_move2.png"));
+		content.add(new ToolButton(ToolEmitter.tool, "data/buttons/placeholder0.png",  "data/buttons/placeholder1.png",  "data/buttons/placeholder2.png"));
+		content.add(new ToolButton(ToolPan.tool, "data/buttons/toolbox_pan0.png",  "data/buttons/toolbox_pan1.png",  "data/buttons/toolbox_pan2.png"));
+		content.add(new ToolButton(ToolZoom.tool, "data/buttons/placeholder0.png",  "data/buttons/placeholder1.png",  "data/buttons/placeholder2.png"));
 		
 		toolButtons.get(MOVE_TOOL_INDEX).setSelected(true);
 	}

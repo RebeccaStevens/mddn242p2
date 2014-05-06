@@ -1,5 +1,7 @@
 package main;
 
+import gui.Canvas;
+
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.InputEvent;
@@ -116,7 +118,10 @@ public class Input implements MouseInputListener, MouseWheelListener, KeyListene
 	
 	private Component process(InputEvent e){
 		Component c = e.getComponent();
-		e.setSource(Main.getCanvas());
+		Canvas can = Main.getCanvas();
+		if(can != null){
+			e.setSource(can);
+		}
 		return c;
 	}
 

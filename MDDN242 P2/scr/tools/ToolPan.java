@@ -1,4 +1,4 @@
-package main.tools;
+package tools;
 
 import java.awt.Component;
 import java.awt.Cursor;
@@ -11,9 +11,9 @@ import main.Main;
 import main.Tool;
 import processing.core.PApplet;
 
-public class Pan extends Tool {
+public class ToolPan extends Tool {
 
-	public static final Pan tool = new Pan();
+	public static final ToolPan tool = new ToolPan();
 	
 	private static final String CURSOR_STND_PATH = "data/cursors/pan0.png";
 	private static final String CURSOR_DOWN_PATH = "data/cursors/pan1.png";
@@ -27,7 +27,7 @@ public class Pan extends Tool {
 	private boolean ingoreNextEvent;
 	
 	@SuppressWarnings("deprecation")
-	private Pan(){
+	private ToolPan(){
 		PApplet pa = new PApplet();
 		cursor_stnd = Toolkit.getDefaultToolkit().createCustomCursor(pa .loadImage(CURSOR_STND_PATH).getImage(), new Point(16, 16), "Pan0");
 		cursor_down = Toolkit.getDefaultToolkit().createCustomCursor(pa.loadImage(CURSOR_DOWN_PATH).getImage(), new Point(16, 16), "Pan1");

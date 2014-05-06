@@ -6,13 +6,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-import main.tools.Move;
+import tools.ToolMove;
 
 public abstract class Tool implements InputListener {
 
 	private static Tool currentTool;
 	
-	private static final Tool defaultTool = Move.tool;
+	private static final Tool defaultTool = ToolMove.tool;
 	
 	public static final Tool getCurrentTool(){
 		if(currentTool == null){

@@ -9,6 +9,7 @@ public class Main {
 	
 	private static MainWindow window;
 	private static Input input;
+	private static Time time;
 	
 	private Main(){}
 	
@@ -24,12 +25,17 @@ public class Main {
 		return input;
 	}
 
+	public static Time getTime() {
+		return time;
+	}
+
 	/**
 	 * Run the program
 	 * @param args
 	 */
 	public static void main(String[] args){
 		input = new Input();
+		time = new Time();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {

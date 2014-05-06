@@ -28,10 +28,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import processing.core.PApplet;
 import main.Input;
 import main.Main;
 import main.Tool;
+import processing.core.PApplet;
 
 public class MainWindow extends JFrame {
 
@@ -351,6 +351,26 @@ public class MainWindow extends JFrame {
 		if(canvas == null) return;
 		Point loc = canvas.getLocation();
 		canvas.setLocation(loc.x + pan.x, loc.y + pan.y);
+	}
+
+	public void addZoom(double percentage, boolean zoomOut) {
+		if(canvas == null) return;
+		int ow = canvas.width;
+		int oh = canvas.height;
+		
+		double newScale = zoomOut
+				? canvas.getScale() / (1 + percentage)
+				: canvas.getScale() * (1 + percentage);
+		canvas.setScale((float) newScale);
+
+		int nw = (int)(ow * newScale);
+		int nh = (int)(oh * newScale);
+		
+		if(nw < 10 || nh < 10) return;
+		
+		Point loc = canvas.getLocation();
+		canvas.setLocation(loc.x + (ow-nw)/2, loc.y + (oh-nh)/2);
+		canvas.size(nw, nh);
 	}
 
 	public void centerCanvas() {
