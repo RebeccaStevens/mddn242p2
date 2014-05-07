@@ -1,11 +1,12 @@
 package tools;
 
-import java.awt.Component;
+import gui.Canvas;
+
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
 
+import main.InputData;
 import main.Main;
 import main.Tool;
 import processing.core.PApplet;
@@ -41,7 +42,9 @@ public class ToolZoom extends Tool {
 	}
 	
 	@Override
-	public void mouseReleased(MouseEvent e, Component c){
-		Main.getMainWindow().addZoom(0.25, e.isAltDown());
+	public void mouseReleased(InputData d){
+		Canvas c = Main.getCanvas();
+		if(c == null) return;
+		Main.getMainWindow().addZoom(0.25, d.isAltDown());
 	}
 }

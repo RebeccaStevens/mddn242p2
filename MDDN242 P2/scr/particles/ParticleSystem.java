@@ -5,76 +5,98 @@ import gui.Canvas;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import main.Main;
 import processing.core.PConstants;
 import processing.core.PGraphics;
+import processing.core.PImage;
 import processing.core.PShape;
 import processing.core.PVector;
 
 public class ParticleSystem {
 	
-	private Canvas canvas;
+	Canvas canvas;
+	Emitter emitter;
+	List<Particle> particles;
+	PShape particleShape;
+	PVector pPosition;
+	PVector pVelocity;
 	
-	private Emitter emitter;
+	double startTime;
+	double stopTime;
 	
-	private List<Particle> particles;
-	private PShape particleShape;
-	private PVector pPosition;
-	private PVector pVelocity;
-	private PVector pGravity;
-	private float pLifeSpan;
-//	private float pFriction;
+	PVector pGravity;
+	double pLifeSpan;
+	PImage pSprite;
+	int pSize;
+//	float pFriction;
+	
+	private Random random;
+	private final long seed;
 
 	public ParticleSystem(Emitter emitter) {
 		this.canvas = Main.getCanvas();
 		this.emitter = emitter;
+		seed = (long)(Math.random() * Long.MAX_VALUE) + 1L;
+		random = new Random(seed);
 		
 		particles = new ArrayList<Particle>();
-		particleShape = canvas.createShape(PShape.GROUP);
+		pSprite = canvas.loadImage("data/particle.png");
 		
 		pGravity = new PVector(0, 0);
 		pPosition = new PVector(emitter.getX(), emitter.getY());
 		pVelocity = new PVector(0, 0);
-		pLifeSpan = 1000;
 	}
 
 	public void draw(PGraphics g) {
+		if(particleShape == null) return;
+		if(Main.getTime().getCurrentTime() < startTime) return;
+		if(Main.getTime().getCurrentTime() >= stopTime) return;
 		g.shape(particleShape);
 	}
 
 	public void update() {
-		int n = emitter.getEmitRate() / Main.getTime().getFramesPerSecond();
+		startTime = emitter.getStartEmitFrame() / (double)Main.getTime().getFramesPerSecond();
+		if(Main.getTime().getCurrentTime() < startTime) return;
+		stopTime = emitter.getStopEmitFrame() / (double)Main.getTime().getFramesPerSecond();
+		if(Main.getTime().getCurrentTime() >= stopTime) return;
+		
+		random.setSeed(seed);
+		particles.clear();
+		pLifeSpan = emitter.getParticleLifeSpan();
+		pVelocity.set(emitter.getVelocityX(), emitter.getVelocityY());
+		pGravity.set(emitter.getGravityX(), emitter.getGravityY());
+		pSize = emitter.getParticleSize();
+		
+		int n = (int) (emitter.getEmissionRate() * (Main.getTime().getCurrentTime() - startTime) + 1);
 		for(int i=0; i<n; i++){
-			Particle p = new Particle(this, Main.getTime().getCurrentTime(), pLifeSpan);
-			p.setPosition(pPosition);
-			PVector rand = new PVector(canvas.random(100), 0);
-			rand.rotate(PConstants.TAU * canvas.random(0, 1));
+			double birth = random.nextDouble() * (Main.getTime().getCurrentTime() - startTime) + startTime;
+			Particle p = new Particle(this, birth, pLifeSpan);
+			
+			PVector rand;
+			rand = new PVector(random.nextFloat() * 10, 0);
+			rand.rotate(PConstants.TAU * random.nextFloat());
+			p.setPosition(rand);
+			
+			rand = new PVector(random.nextFloat() * 100, 0);
+			rand.rotate(PConstants.TAU * random.nextFloat());
 			p.setVelocity(PVector.add(pVelocity, rand));
 			
 			particles.add(p);
-			particleShape.addChild(p.getShape());
 		}
 		
 		List<Particle> dead = new ArrayList<Particle>();
 		for (Particle p : particles) {
 			if(!p.update()){
 				dead.add(p);
-				particleShape.removeChild(particleShape.getChildIndex(p.getShape()));
 			}
 		}
 		particles.removeAll(dead);
-	}
-
-	PVector getGravity() {
-		return pGravity.get();
-	}
-
-	float getPLiftSpan() {
-		return pLifeSpan;
-	}
-
-	Canvas getCanvas() {
-		return canvas;
+		
+		particleShape = canvas.createShape(PShape.GROUP);
+		for(Particle p : particles){
+			particleShape.addChild(p.getShape());
+		}
 	}
 }

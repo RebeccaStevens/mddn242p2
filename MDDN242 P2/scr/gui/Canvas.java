@@ -1,16 +1,13 @@
 package gui;
 
-import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.Input;
 import main.Main;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PGraphics;
+import entities.Emitter;
 import entities.Entity;
 
 public class Canvas extends PApplet{
@@ -25,6 +22,7 @@ public class Canvas extends PApplet{
 	private int background_color;
 
 	private List<Entity> entities;
+	private Entity selectedEntity;
 
 	public Canvas(int width, int height, int background_color){
 		this.imageWidth = width;
@@ -34,45 +32,47 @@ public class Canvas extends PApplet{
 
 	@Override
 	public void setup(){
-		// remove the default input listeners (for efficiency)
-		for(MouseListener l : getMouseListeners()) removeMouseListener(l);
-		for(MouseMotionListener l : getMouseMotionListeners()) removeMouseMotionListener(l);
-		for(MouseWheelListener l : getMouseWheelListeners()) removeMouseWheelListener(l);
-		for(KeyListener l : getKeyListeners()) removeKeyListener(l);
-
-		Input input = Main.getInput();
-		addMouseListener(input);
-		addMouseMotionListener(input);
-		addMouseWheelListener(input);
-		addKeyListener(input);
-
 		createNewCanvas(imageWidth, imageHeight, background_color);
 		noLoop();
 	}
 
 	@Override
 	public void draw(){
+		updateImage();
+		Main.getMainWindow().getProperties().update();
+		
+		scale(scale);
+		image(image.get(), 0, 0);
+		drawEnitities();
+	}
+
+	private void drawEnitities() {
+		for(Entity ent : entities){
+			ent.drawEntity(g);
+		}
+	}
+
+	private void updateImage() {
+		image = createGraphics(imageWidth, imageHeight, P2D);
 		image.beginDraw();
 		image.background(background_color);
 		for(Entity e : entities){
 			e.update();
-			e.draw(image);
-			System.out.println(1);
+			e.drawGraphics(image);
 		}
-		image.rect(50, 50, 300, 300);
 		image.endDraw();
-
-		scale(scale);
-		image(image.get(), 0, 0);
 	}
 
 	public void createNewCanvas(int w, int h, int background_color){
-		image = createGraphics(w, h);
-		imageWidth = image.width;
-		imageHeight = image.height;
+		imageWidth = w;
+		imageHeight = h;
 		this.background_color = background_color;
 		entities = new ArrayList<Entity>();
+		selectedEntity = null;
+		hint(PConstants.DISABLE_DEPTH_MASK);
 		randomSeed(1);
+		Emitter.reset();
+		if(!redraw) redraw();
 	}
 
 	@Override
@@ -102,8 +102,8 @@ public class Canvas extends PApplet{
 	}
 
 	public void addEntity(Entity ent) {
-		System.out.println("E");
 		entities.add(ent);
+		setSelectedEntity(ent);
 		if(!redraw){
 			redraw();
 		}
@@ -111,5 +111,41 @@ public class Canvas extends PApplet{
 
 	public void removeEntity(Entity ent) {
 		entities.remove(ent);
+	}
+	
+	public Entity getSelectedEntity() {
+		return selectedEntity;
+	}
+	
+	public void setSelectedEntity(Entity entity) {
+		this.selectedEntity = entity;
+		Main.getMainWindow().getOutline().setSelectedEntity(entity);
+		Main.getMainWindow().getProperties().setSelectedEntity(entity);
+	}
+	
+	public void deleteSelectedEntity() {
+		if(selectedEntity == null) return;
+		entities.remove(selectedEntity);
+		Main.getMainWindow().getOutline().remove(selectedEntity);
+		setSelectedEntity(null);
+		if(!redraw){
+			redraw();
+		}
+	}
+
+	public void selectEntityAt(int x, int y){
+		for(Entity e : entities){
+			if(Math.abs(e.getX() - x) <= 10 && Math.abs(e.getY() - y) <= 10){
+				setSelectedEntity(e);
+				return;
+			}
+		}
+		setSelectedEntity(null);
+	}
+
+	public void exportFrame(String path, int currentFrame) {
+		Main.getTime().setCurrentFrame(currentFrame);
+		// TODO update image
+		image.save(path);
 	}
 }

@@ -1,15 +1,15 @@
 package tools;
 
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
 
+import entities.Emitter;
+import gui.Canvas;
+import main.InputData;
 import main.Main;
 import main.Tool;
 import processing.core.PApplet;
-import entities.Emitter;
 
 public class ToolEmitter extends Tool{
 
@@ -30,8 +30,12 @@ public class ToolEmitter extends Tool{
 	}
 	
 	@Override
-	public void mouseReleased(MouseEvent e, Component c){
-		System.out.println("R");
-		Main.getCanvas().addEntity(new Emitter(e.getX(), e.getY()));
+	public void mouseReleased(InputData d){
+		Canvas c = Main.getCanvas();
+		if(c == null) return;
+		
+		if(!(d.getOriginalComponent() instanceof java.awt.Canvas)) return;
+		float s = c.getScale();
+		c.addEntity(new Emitter((int)(d.getMouseX()/s), (int)(d.getMouseY()/s)));
 	}
 }

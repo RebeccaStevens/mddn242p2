@@ -14,6 +14,11 @@ public class CanvasSettings extends Toolbar{
 		super(parentFrame, false);
 		setPreferredSize(new Dimension(640, 40));
 	}
+
+	@Override
+	public void reset() {
+		
+	}
 	
 	@Override
 	protected void paintComponent(Graphics g) {

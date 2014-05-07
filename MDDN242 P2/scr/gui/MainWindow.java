@@ -28,8 +28,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import main.Input;
-import main.Main;
 import main.Tool;
 import processing.core.PApplet;
 
@@ -37,7 +35,7 @@ public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = -4580460675035694517L;
 
-	private static final Color BG_COLOR = new Color(40, 40, 40);
+	public static final Color BG_COLOR = new Color(40, 40, 40);
 
 	private static final int CENTER = 0;
 	private static final int NORTH = 1;
@@ -92,6 +90,10 @@ public class MainWindow extends JFrame {
 
 	public void displayNewWindow() {
 		new NewWindow(this);
+	}
+
+	public void displayExportWindow() {
+		new ExportWindow(this);
 	}
 
 	/**
@@ -299,12 +301,6 @@ public class MainWindow extends JFrame {
 			}
 		});
 		
-		Input input = Main.getInput();
-		containers[CENTER].addMouseListener(input);
-		containers[CENTER].addMouseMotionListener(input);
-		containers[CENTER].addMouseWheelListener(input);
-		containers[CENTER].addKeyListener(input);
-		
 		Container pane = getContentPane();
 		pane.add(containers[CENTER], BorderLayout.CENTER);
 		pane.add(containers[NORTH],  BorderLayout.NORTH);
@@ -328,7 +324,8 @@ public class MainWindow extends JFrame {
 			canvas.init();
 		}
 		else{
-			//TODO remove all stuff added to the picture
+			outline.reset();
+			timeLine.reset();
 			canvas.createNewCanvas(width, height, background_color);
 		}
 	}
@@ -460,5 +457,13 @@ public class MainWindow extends JFrame {
 		} catch (Exception e) {
 			// TODO
 		}
+	}
+
+	public Outline getOutline() {
+		return outline;
+	}
+
+	public Properties getProperties() {
+		return properties;
 	}
 }

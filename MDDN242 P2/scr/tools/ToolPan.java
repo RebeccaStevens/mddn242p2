@@ -1,12 +1,13 @@
 package tools;
 
-import java.awt.Component;
+import gui.Canvas;
+
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 
-import main.Input;
+import main.InputData;
 import main.Main;
 import main.Tool;
 import processing.core.PApplet;
@@ -43,17 +44,19 @@ public class ToolPan extends Tool {
 	}
 	
 	@Override
-	public void mouseDragged(MouseEvent e, Component c) {
+	public void mouseDragged(InputData d) {
+		Canvas c = Main.getCanvas();
+		if(c == null) return;
+		
 		if(ingoreNextEvent){
 			ingoreNextEvent = false;
 			return;
 		}
 		
-		Input input = Main.getInput();
-		if(input.isMouseButtonDown(MouseEvent.BUTTON1)){
-			Main.getMainWindow().addPan(input.getMouseLocationDelta());
+		if(d.isMouseButtonDown(MouseEvent.BUTTON1)){
+			Main.getMainWindow().addPan(d.getMouseLocationDelta());
 			
-			if(c == Main.getCanvas()) ingoreNextEvent = true;
+			if(d.getOriginalComponent() instanceof java.awt.Canvas) ingoreNextEvent = true;
 		}
 	}
 }

@@ -8,7 +8,6 @@ import javax.swing.SwingUtilities;
 public class Main {
 	
 	private static MainWindow window;
-	private static Input input;
 	private static Time time;
 	
 	private Main(){}
@@ -21,10 +20,6 @@ public class Main {
 		return window.getCanvas();
 	}
 	
-	public static Input getInput(){
-		return input;
-	}
-
 	public static Time getTime() {
 		return time;
 	}
@@ -34,7 +29,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args){
-		input = new Input();
+		new Input();
 		time = new Time();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override

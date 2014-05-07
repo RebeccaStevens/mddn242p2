@@ -1,43 +1,41 @@
 package particles;
 
 import main.Main;
-import gui.Canvas;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PShape;
 import processing.core.PVector;
 
 class Particle {
-
-	private Canvas canvas;
-
 	private PShape part;
 	private PVector position;
 	private PVector velocity;
-	private float lifeSpan;
+	private double lifeSpan;
 	private double timeOfBirth;
 	
 	private ParticleSystem sys;
 
-	Particle(ParticleSystem ps, double timeOfBirth, float lifeSpan) {
+	Particle(ParticleSystem ps, double timeOfBirth, double lifeSpan) {
 		sys = ps;
-		canvas = sys.getCanvas();
 		this.timeOfBirth = timeOfBirth;
-		this.lifeSpan = canvas.random(0, lifeSpan);
+		this.lifeSpan = lifeSpan;
 		
 		position = new PVector();
 		velocity = new PVector();
-		part = canvas.createShape(PConstants.ELLIPSE, 0, 0, 10, 10);
-//		part = canvas.createShape();
-//		part.beginShape(PConstants.QUAD);
-//		part.noStroke();
-//		part.texture(sprite);
-//		part.normal(0, 0, 1);
-//		part.vertex(-partSize/2, -partSize/2, 0, 0);
-//		part.vertex(+partSize/2, -partSize/2, sprite.width, 0);
-//		part.vertex(+partSize/2, +partSize/2, sprite.width, sprite.height);
-//		part.vertex(-partSize/2, +partSize/2, 0, sprite.height);
-//		part.endShape();
+//		part = sys.canvas.createShape(PConstants.ELLIPSE, 0, 0, 10, 10);
+		
+		int partSize = sys.pSize;
+		
+		part = sys.canvas.createShape();
+		part.beginShape(PConstants.QUAD);
+		part.noStroke();
+		part.texture(sys.pSprite);
+		part.normal(0, 0, 1);
+		part.vertex(-partSize/2, -partSize/2, 0, 0);
+		part.vertex(+partSize/2, -partSize/2, sys.pSprite.width, 0);
+		part.vertex(+partSize/2, +partSize/2, sys.pSprite.width, sys.pSprite.height);
+		part.vertex(-partSize/2, +partSize/2, 0, sys.pSprite.height);
+		part.endShape();
 	}
 	
 	void setPosition(PVector pos){
@@ -64,10 +62,16 @@ class Particle {
 		}
 
 		double time = Main.getTime().getCurrentTime() - timeOfBirth;
-		position.set(PVector.add(PVector.mult(velocity, (float) time), PVector.mult(sys.getGravity(), (float) (time * time * 0.5))));
-
-		part.setTint(0x00FFFFFF | ((int)(PApplet.map(lifeSpan, sys.getPLiftSpan(), 0, 0xFF, 0)) << 24));
-		part.translate(velocity.x, velocity.y);
+		position.set(PVector.add(PVector.mult(velocity, (float) time), PVector.mult(sys.pGravity, (float) (time * time * 0.5))));
+		
+		double timeLeft = lifeSpan - (Main.getTime().getCurrentTime() - timeOfBirth);
+		int v = ((int)(PApplet.map((float) timeLeft, (float) sys.pLifeSpan, 0, 0xFF, 0)) << 24) |
+				sys.emitter.getParticleRed() << 16|
+				sys.emitter.getParticleGreen() << 8|
+				sys.emitter.getParticleBlue();
+		
+		part.setTint(v);
+		part.translate(position.x, position.y);
 		
 		return true;
 	}

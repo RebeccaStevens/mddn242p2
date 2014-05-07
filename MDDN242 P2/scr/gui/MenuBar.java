@@ -64,24 +64,32 @@ public class MenuBar extends JMenuBar {
 		private void addOpenItem() {
 			JMenuItem item = new JMenuItem("Open", 'o');
 			item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+			item.setEnabled(false);
 			add(item);
 		}
 
 		private void addSaveItem() {
 			JMenuItem item = new JMenuItem("Save", 's');
 			item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+			item.setEnabled(false);
 			add(item);
 		}
 
 		private void addSaveAsItem() {
 			JMenuItem item = new JMenuItem("Save As...", 'a');
 			item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
+			item.setEnabled(false);
 			add(item);
 		}
 		
 		private void addExportItem() {
 			JMenuItem item = new JMenuItem("Export", 'e');
 			item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK | ActionEvent.ALT_MASK | ActionEvent.SHIFT_MASK));
+			item.addActionListener(new ActionListener() {
+				@Override public void actionPerformed(ActionEvent e) {
+					Main.getMainWindow().displayExportWindow();
+				}
+			});
 			add(item);
 		}
 		
@@ -109,6 +117,7 @@ public class MenuBar extends JMenuBar {
 		public EditMenu(){
 			setText("Edit");
 			setMnemonic('e');
+			setEnabled(false);
 		}
 	}
 	
@@ -139,6 +148,7 @@ public class MenuBar extends JMenuBar {
 		public HelpMenu(){
 			setText("Help");
 			setMnemonic('h');
+			setEnabled(false);
 		}
 	}
 }

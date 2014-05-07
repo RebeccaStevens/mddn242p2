@@ -37,6 +37,11 @@ public class ToolBox extends Toolbar{
 		setPreferredSize(new Dimension(78, 400));
 		addButtons();
 	}
+
+	@Override
+	public void reset() {
+		
+	}
 	
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -47,9 +52,9 @@ public class ToolBox extends Toolbar{
 		Container content = getContentContainer();
 		content.setLayout(new FlowLayout(FlowLayout.LEFT, 4, 4));
 		content.add(new ToolButton(ToolMove.tool, "data/buttons/toolbox_move0.png", "data/buttons/toolbox_move1.png", "data/buttons/toolbox_move2.png"));
-		content.add(new ToolButton(ToolEmitter.tool, "data/buttons/placeholder0.png",  "data/buttons/placeholder1.png",  "data/buttons/placeholder2.png"));
+		content.add(new ToolButton(ToolEmitter.tool, "data/buttons/toolbox_emitter0.png",  "data/buttons/toolbox_emitter1.png",  "data/buttons/toolbox_emitter2.png"));
 		content.add(new ToolButton(ToolPan.tool, "data/buttons/toolbox_pan0.png",  "data/buttons/toolbox_pan1.png",  "data/buttons/toolbox_pan2.png"));
-		content.add(new ToolButton(ToolZoom.tool, "data/buttons/placeholder0.png",  "data/buttons/placeholder1.png",  "data/buttons/placeholder2.png"));
+		content.add(new ToolButton(ToolZoom.tool, "data/buttons/toolbox_zoom0.png",  "data/buttons/toolbox_zoom1.png",  "data/buttons/toolbox_zoom2.png"));
 		
 		toolButtons.get(MOVE_TOOL_INDEX).setSelected(true);
 	}

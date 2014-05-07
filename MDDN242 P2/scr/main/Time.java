@@ -15,10 +15,22 @@ public class Time {
 	}
 	
 	public double getCurrentTime(){
-		return currentFrame / (double)fps;
+		return (currentFrame-1) / (double)fps;
 	}
 	
 	public int getFramesPerSecond(){
 		return fps;
+	}
+	
+	public void setCurrentFrame(int frame){
+		currentFrame = frame;
+	}
+
+	public int goToNextFrame() {
+		return ++currentFrame;
+	}
+	
+	public int goToPreviousFrame() {
+		return --currentFrame;
 	}
 }

@@ -126,6 +126,8 @@ public abstract class Toolbar extends JPanel {
 		super.setPreferredSize(preferredSize);
 	}
 
+	public abstract void reset();
+	
 	/**
 	 * Call this when the mouse starts to drag the popup window.
 	 * @param mouseX

@@ -60,7 +60,6 @@ public class NewWindow extends JDialog {
 		super(owner, true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle("New");
-		setSize(300, 400);
 		setResizable(false);
 		setType(java.awt.Window.Type.POPUP);
 
