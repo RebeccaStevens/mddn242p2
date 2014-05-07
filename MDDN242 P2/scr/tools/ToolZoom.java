@@ -15,8 +15,8 @@ public class ToolZoom extends Tool {
 
 	public static final ToolZoom tool = new ToolZoom();
 	
-	private static final String CURSOR_IN_PATH = "data/cursors/zoomIn.png";
-	private static final String CURSOR_OUT_PATH = "data/cursors/zoomOut.png";
+	private static final String CURSOR_IN_PATH = "cursors/zoomIn.png";
+	private static final String CURSOR_OUT_PATH = "cursors/zoomOut.png";
 	
 	private Cursor cursor_in;
 	private Cursor cursor_out;

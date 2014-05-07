@@ -15,7 +15,7 @@ public class ToolEmitter extends Tool{
 
 	public static final ToolEmitter tool = new ToolEmitter();
 
-	private static final String CURSOR_PATH = "data/cursors/emitter.png";
+	private static final String CURSOR_PATH = "cursors/emitter.png";
 	
 	private Cursor cursor;
 	

@@ -42,7 +42,7 @@ public class ParticleSystem {
 		random = new Random(seed);
 		
 		particles = new ArrayList<Particle>();
-		pSprite = canvas.loadImage("data/particle.png");
+		pSprite = canvas.loadImage("particle.png");
 		
 		pGravity = new PVector(0, 0);
 		pPosition = new PVector(emitter.getX(), emitter.getY());

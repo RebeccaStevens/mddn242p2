@@ -16,7 +16,7 @@ public class ToolMove extends Tool {
 
 	public static final ToolMove tool = new ToolMove();
 	
-	private static final String CURSOR_PATH = "data/cursors/move.png";
+	private static final String CURSOR_PATH = "cursors/move.png";
 	
 	private Cursor cursor;
 	

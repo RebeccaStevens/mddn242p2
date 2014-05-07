@@ -430,11 +430,11 @@ public class MainWindow extends JFrame {
 	private void setupIcon() {
 		List<Image> icons = new ArrayList<Image>();
 		PApplet t = new PApplet();
-		icons.add(t.loadImage("data/icons/main16.png").getImage());
-		icons.add(t.loadImage("data/icons/main24.png").getImage());
-		icons.add(t.loadImage("data/icons/main32.png").getImage());
-		icons.add(t.loadImage("data/icons/main48.png").getImage());
-		icons.add(t.loadImage("data/icons/main64.png").getImage());
+		icons.add(t.loadImage("icons/main16.png").getImage());
+		icons.add(t.loadImage("icons/main24.png").getImage());
+		icons.add(t.loadImage("icons/main32.png").getImage());
+		icons.add(t.loadImage("icons/main48.png").getImage());
+		icons.add(t.loadImage("icons/main64.png").getImage());
 		setIconImages(icons);
 	}
 

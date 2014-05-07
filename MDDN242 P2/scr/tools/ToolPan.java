@@ -16,8 +16,8 @@ public class ToolPan extends Tool {
 
 	public static final ToolPan tool = new ToolPan();
 	
-	private static final String CURSOR_STND_PATH = "data/cursors/pan0.png";
-	private static final String CURSOR_DOWN_PATH = "data/cursors/pan1.png";
+	private static final String CURSOR_STND_PATH = "cursors/pan0.png";
+	private static final String CURSOR_DOWN_PATH = "cursors/pan1.png";
 	
 	private Cursor cursor_stnd;
 	private Cursor cursor_down;

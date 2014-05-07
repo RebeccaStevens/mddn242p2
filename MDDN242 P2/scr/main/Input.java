@@ -38,7 +38,7 @@ public class Input implements AWTEventListener{
 			case MouseEvent.MOUSE_MOVED			: mouseMoved((MouseEvent)e);			break;
 			case MouseEvent.MOUSE_PRESSED		: mousePressed((MouseEvent)e);			break;
 			case MouseEvent.MOUSE_RELEASED		: mouseReleased((MouseEvent)e);			break;
-			case MouseWheelEvent.MOUSE_WHEEL	: mouseWheelMoved((MouseWheelEvent)e);	break;
+			case MouseEvent.MOUSE_WHEEL	: mouseWheelMoved((MouseWheelEvent)e);	break;
 			case KeyEvent.KEY_PRESSED			: keyPressed((KeyEvent)e);				break;
 			case KeyEvent.KEY_RELEASED			: keyReleased((KeyEvent)e);				break;
 			case KeyEvent.KEY_TYPED				: keyTyped((KeyEvent)e);				break;
